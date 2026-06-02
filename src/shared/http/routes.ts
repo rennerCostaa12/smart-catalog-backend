@@ -1,18 +1,18 @@
-import { Router } from 'express';
+import { Router } from "express";
 
-import { usersRoutes } from '../../modules/users/routes/users.routes';
-import { HttpStatusCode } from './HttpStatusCode';
-import { successResponse } from './responses';
+import { paymentsRoutes } from "../../modules/payments/routes/payments/routes";
+import { HttpStatusCode } from "./HttpStatusCode";
+import { successResponse } from "./responses";
 
 export const routes = Router();
 
-routes.get('/health', (_request, response) => {
+routes.get("/health", (_request, response) => {
   return successResponse({
     response,
     statusCode: HttpStatusCode.OK,
-    message: 'Application is healthy.',
-    data: { status: 'ok' }
+    message: "Ok.",
+    data: { status: "ok" },
   });
 });
 
-routes.use('/api/users', usersRoutes);
+routes.use("/api/payments", paymentsRoutes);

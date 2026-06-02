@@ -1,6 +1,6 @@
-import { Response } from 'express';
+import { Response } from "express";
 
-import { HttpStatusCode } from './HttpStatusCode';
+import { HttpStatusCode } from "./HttpStatusCode";
 
 type SuccessResponseOptions<T> = {
   response: Response;
@@ -19,13 +19,13 @@ type ErrorResponseOptions = {
 export const successResponse = <T>({
   response,
   statusCode = HttpStatusCode.OK,
-  message = 'Success.',
-  data
+  message = "Success.",
+  data,
 }: SuccessResponseOptions<T>): Response => {
   return response.status(statusCode).json({
     success: true,
     message,
-    data: data ?? null
+    data: data ?? null,
   });
 };
 
@@ -33,11 +33,11 @@ export const errorResponse = ({
   response,
   statusCode,
   message,
-  errors
+  errors,
 }: ErrorResponseOptions): Response => {
   return response.status(statusCode).json({
     success: false,
     message,
-    errors: errors ?? []
+    errors: errors ?? [],
   });
 };

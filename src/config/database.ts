@@ -1,21 +1,20 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from "sequelize";
 
-import { env } from './env';
-import { UserModel } from '../modules/users/models/UserModel';
+import { env } from "./env";
 
 export const sequelize = new Sequelize(
   env.database.name,
   env.database.user,
   env.database.password,
   {
-    dialect: 'mysql',
+    dialect: "mysql",
     host: env.database.host,
     port: env.database.port,
-    logging: false
-  }
+    logging: false,
+  },
 );
 
-const models = [UserModel];
+const models: Array<{ initialize: (sequelize: Sequelize) => void }> = [];
 
 export const initializeDatabase = async (): Promise<void> => {
   models.forEach((model) => model.initialize(sequelize));

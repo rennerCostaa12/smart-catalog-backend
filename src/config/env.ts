@@ -6,7 +6,7 @@ const getEnv = (key: string, fallback?: string): string => {
   const value = process.env[key] ?? fallback;
 
   if (!value) {
-    throw new Error(`Environment variable "${key}" is required.`);
+    throw new Error(`Variáveis de ambiente "${key}" é obrigatória.`);
   }
 
   return value;
@@ -21,5 +21,9 @@ export const env = {
     name: getEnv('DB_NAME', 'boilerplate_nodejs'),
     user: getEnv('DB_USER', 'root'),
     password: getEnv('DB_PASSWORD', 'root')
+  },
+  asaas: {
+    baseUrl: getEnv('ASAAS_BASE_URL'),
+    apiKey: getEnv('ASAAS_API_KEY')
   }
 };
