@@ -1,21 +1,21 @@
-import { NextFunction, Request, Response } from 'express';
-import { ValidationError } from 'yup';
+import { NextFunction, Request, Response } from "express";
+import { ValidationError } from "yup";
 
-import { AppError } from '../errors/AppError';
-import { HttpStatusCode } from '../http/HttpStatusCode';
-import { errorResponse } from '../http/responses';
+import { AppError } from "../errors/AppError";
+import { HttpStatusCode } from "../http/HttpStatusCode";
+import { errorResponse } from "../http/responses";
 
 export const errorHandler = (
   error: Error,
   _request: Request,
   response: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): Response => {
   if (error instanceof AppError) {
     return errorResponse({
       response,
       statusCode: error.statusCode,
-      message: error.message
+      message: error.message,
     });
   }
 
@@ -23,14 +23,14 @@ export const errorHandler = (
     return errorResponse({
       response,
       statusCode: HttpStatusCode.BAD_REQUEST,
-      message: 'Validation failed.',
-      errors: error.errors
+      message: "Validation failed.",
+      errors: error.errors,
     });
   }
 
   return errorResponse({
     response,
     statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
-    message: 'Internal server error.'
+    message: "Internal server error.",
   });
 };
