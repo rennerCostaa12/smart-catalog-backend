@@ -39,9 +39,21 @@ const creditCardHolderInfoSchema = yup
   })
   .default(undefined);
 
+const customerDataSchema = yup
+  .object({
+    name: yup.string().required("O campo customerData.name é obrigatório."),
+    cpfCnpj: yup
+      .string()
+      .required("O campo customerData.cpfCnpj é obrigatório."),
+  })
+  .default(undefined);
+
 export const createCreditCardPaymentSchema = yup
   .object({
-    customer: yup.string().required("O campo customer é obrigatório."),
+    customer: yup.string(),
+    userId: yup
+      .mixed<string | number>()
+      .required("O campo userId é obrigatório."),
     value: yup
       .number()
       .required("O campo value é obrigatório.")
@@ -53,6 +65,7 @@ export const createCreditCardPaymentSchema = yup
     externalReference: yup
       .string()
       .max(255, "O campo externalReference deve ter no máximo 255 caracteres."),
+    customerData: customerDataSchema,
     creditCard: creditCardSchema,
     creditCardHolderInfo: creditCardHolderInfoSchema,
     creditCardToken: yup.string(),
@@ -72,4 +85,12 @@ export const createCreditCardPaymentSchema = yup
         (value.creditCard && value.creditCardHolderInfo),
       );
     },
+  )
+  .test(
+    "customer-or-customer-data",
+    "Envie customer, customerData ou creditCardHolderInfo para identificar o cliente.",
+    (value) =>
+      Boolean(
+        value?.customer || value?.customerData || value?.creditCardHolderInfo,
+      ),
   );

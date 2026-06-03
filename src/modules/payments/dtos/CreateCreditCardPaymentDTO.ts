@@ -1,3 +1,5 @@
+import { AsaasCustomerRequest } from "../services/AsaasPaymentsService/types";
+
 export type CreditCardDTO = {
   holderName: string;
   number: string;
@@ -18,11 +20,13 @@ export type CreditCardHolderInfoDTO = {
 };
 
 export interface CreateCreditCardPaymentDTO {
-  customer: string;
+  customer?: string;
+  userId: string | number;
   value: number;
   dueDate: string;
   description?: string;
   externalReference?: string;
+  customerData?: AsaasCustomerRequest;
   creditCard?: CreditCardDTO;
   creditCardHolderInfo?: CreditCardHolderInfoDTO;
   creditCardToken?: string;

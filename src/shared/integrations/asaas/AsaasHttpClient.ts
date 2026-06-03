@@ -80,6 +80,10 @@ export class AsaasHttpClient {
       return HttpStatusCode.BAD_REQUEST;
     }
 
+    if (statusCode === HttpStatusCode.NOT_FOUND) {
+      return HttpStatusCode.NOT_FOUND;
+    }
+
     return HttpStatusCode.INTERNAL_SERVER_ERROR;
   }
 }
