@@ -22,6 +22,9 @@ export const env = {
     user: getEnv('DB_USER', 'root'),
     password: getEnv('DB_PASSWORD', 'root')
   },
+  auth: {
+    secret: getEnv('AUTH_SECRET', 'development-auth-secret')
+  },
   asaas: {
     baseUrl: getEnv('ASAAS_BASE_URL'),
     apiKey: getEnv('ASAAS_API_KEY')
