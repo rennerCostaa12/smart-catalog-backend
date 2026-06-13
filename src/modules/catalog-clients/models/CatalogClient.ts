@@ -7,24 +7,22 @@ import {
   Sequelize,
 } from "sequelize";
 
-import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
+import { Admin } from "../../admin/models/Admin";
+import { Product } from "../../products/models/Product";
 
-export class Admin extends Model<
-  InferAttributes<Admin>,
-  InferCreationAttributes<Admin>
+export class CatalogClient extends Model<
+  InferAttributes<CatalogClient>,
+  InferCreationAttributes<CatalogClient>
 > {
   declare id: CreationOptional<number>;
   declare name: string;
-  declare document: string;
-  declare email: string;
-  declare phone: string;
-  declare catalogClientId: number;
-  declare passwordHash: string;
+  declare slug: string;
+  declare description: CreationOptional<string | null>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
   public static initialize(sequelize: Sequelize): void {
-    Admin.init(
+    CatalogClient.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -35,42 +33,34 @@ export class Admin extends Model<
           type: DataTypes.STRING,
           allowNull: false,
         },
-        document: {
+        slug: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: true,
         },
-        email: {
+        description: {
           type: DataTypes.STRING,
-          allowNull: false,
-        },
-        phone: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        catalogClientId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-          field: "catalog_client_id",
-        },
-        passwordHash: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          field: "password_hash",
+          allowNull: true,
         },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
       },
       {
         sequelize,
-        tableName: "admin",
+        tableName: "catalog_client",
         underscored: true,
       },
     );
   }
 
   public static associate(): void {
-    Admin.belongsTo(CatalogClient, {
-      as: "catalogClient",
+    CatalogClient.hasMany(Admin, {
+      as: "admins",
+      foreignKey: "catalogClientId",
+    });
+
+    CatalogClient.hasMany(Product, {
+      as: "products",
       foreignKey: "catalogClientId",
     });
   }

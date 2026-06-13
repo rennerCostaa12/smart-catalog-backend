@@ -34,30 +34,46 @@ export const generateAuthToken = (
 };
 
 export const verifyAuthToken = (token: string): AuthTokenPayload | null => {
-  const [header, body, signature] = token.split(".");
+  try {
+    const parts = token.split(".");
 
-  if (!header || !body || !signature) {
+    if (parts.length !== 3) {
+      return null;
+    }
+
+    const [header, body, signature] = parts;
+
+    if (!header || !body || !signature) {
+      return null;
+    }
+
+    const expectedSignature = sign(`${header}.${body}`);
+    const receivedSignature = Buffer.from(signature);
+    const expectedSignatureBuffer = Buffer.from(expectedSignature);
+
+    if (
+      receivedSignature.length !== expectedSignatureBuffer.length ||
+      !timingSafeEqual(receivedSignature, expectedSignatureBuffer)
+    ) {
+      return null;
+    }
+
+    const payload = JSON.parse(
+      Buffer.from(body, "base64url").toString("utf8"),
+    ) as Partial<AuthTokenPayload>;
+
+    if (
+      !Number.isInteger(payload.sub) ||
+      payload.sub! <= 0 ||
+      (payload.role !== "user" && payload.role !== "admin") ||
+      !Number.isInteger(payload.exp) ||
+      payload.exp! <= Math.floor(Date.now() / 1000)
+    ) {
+      return null;
+    }
+
+    return payload as AuthTokenPayload;
+  } catch {
     return null;
   }
-
-  const expectedSignature = sign(`${header}.${body}`);
-  const receivedSignature = Buffer.from(signature);
-  const expectedSignatureBuffer = Buffer.from(expectedSignature);
-
-  if (
-    receivedSignature.length !== expectedSignatureBuffer.length ||
-    !timingSafeEqual(receivedSignature, expectedSignatureBuffer)
-  ) {
-    return null;
-  }
-
-  const payload = JSON.parse(
-    Buffer.from(body, "base64url").toString("utf8"),
-  ) as AuthTokenPayload;
-
-  if (payload.exp < Math.floor(Date.now() / 1000)) {
-    return null;
-  }
-
-  return payload;
 };

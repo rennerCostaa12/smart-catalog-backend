@@ -4,27 +4,30 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
   Sequelize,
 } from "sequelize";
 
 import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
+import { CategoryProduct } from "../../categories-products/models/CategoryProduct";
 
-export class Admin extends Model<
-  InferAttributes<Admin>,
-  InferCreationAttributes<Admin>
+export class Product extends Model<
+  InferAttributes<Product>,
+  InferCreationAttributes<Product>
 > {
   declare id: CreationOptional<number>;
   declare name: string;
-  declare document: string;
-  declare email: string;
-  declare phone: string;
+  declare description: CreationOptional<string | null>;
+  declare value: number;
+  declare imageUrl: CreationOptional<string | null>;
+  declare categoriesId: number;
   declare catalogClientId: number;
-  declare passwordHash: string;
+  declare category?: NonAttribute<CategoryProduct>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
   public static initialize(sequelize: Sequelize): void {
-    Admin.init(
+    Product.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -35,41 +38,47 @@ export class Admin extends Model<
           type: DataTypes.STRING,
           allowNull: false,
         },
-        document: {
+        description: {
           type: DataTypes.STRING,
+          allowNull: true,
+        },
+        value: {
+          type: DataTypes.DECIMAL(10, 2),
           allowNull: false,
         },
-        email: {
+        imageUrl: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
+          field: "image_url",
         },
-        phone: {
-          type: DataTypes.STRING,
+        categoriesId: {
+          type: DataTypes.INTEGER,
           allowNull: false,
+          field: "categories_id",
         },
         catalogClientId: {
           type: DataTypes.INTEGER,
           allowNull: false,
           field: "catalog_client_id",
         },
-        passwordHash: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          field: "password_hash",
-        },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
       },
       {
         sequelize,
-        tableName: "admin",
+        tableName: "products",
         underscored: true,
       },
     );
   }
 
   public static associate(): void {
-    Admin.belongsTo(CatalogClient, {
+    Product.belongsTo(CategoryProduct, {
+      as: "category",
+      foreignKey: "categoriesId",
+    });
+
+    Product.belongsTo(CatalogClient, {
       as: "catalogClient",
       foreignKey: "catalogClientId",
     });
