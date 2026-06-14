@@ -4,8 +4,11 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
   Sequelize,
 } from "sequelize";
+
+import { Payment } from "../../payments/models/Payment";
 
 export class User extends Model<
   InferAttributes<User>,
@@ -15,6 +18,7 @@ export class User extends Model<
   declare name: string;
   declare email: string;
   declare phone: string;
+  declare payments?: NonAttribute<Payment[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -47,5 +51,12 @@ export class User extends Model<
         underscored: true,
       },
     );
+  }
+
+  public static associate(): void {
+    User.hasMany(Payment, {
+      as: "payments",
+      foreignKey: "userId",
+    });
   }
 }

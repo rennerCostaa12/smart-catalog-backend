@@ -8,21 +8,21 @@ import {
   Sequelize,
 } from "sequelize";
 
-import { Product } from "../../products/models/Product";
+import { Payment } from "../../payments/models/Payment";
 
-export class CategoryProduct extends Model<
-  InferAttributes<CategoryProduct>,
-  InferCreationAttributes<CategoryProduct>
+export class MethodPayment extends Model<
+  InferAttributes<MethodPayment>,
+  InferCreationAttributes<MethodPayment>
 > {
   declare id: CreationOptional<number>;
   declare name: string;
   declare description: CreationOptional<string | null>;
-  declare products?: NonAttribute<Product[]>;
+  declare payments?: NonAttribute<Payment[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
   public static initialize(sequelize: Sequelize): void {
-    CategoryProduct.init(
+    MethodPayment.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -42,16 +42,16 @@ export class CategoryProduct extends Model<
       },
       {
         sequelize,
-        tableName: "categories_products",
+        tableName: "method_payments",
         underscored: true,
       },
     );
   }
 
   public static associate(): void {
-    CategoryProduct.hasMany(Product, {
-      as: "products",
-      foreignKey: "categoriesId",
+    MethodPayment.hasMany(Payment, {
+      as: "payments",
+      foreignKey: "methodPaymentId",
     });
   }
 }

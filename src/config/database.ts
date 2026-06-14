@@ -3,7 +3,10 @@ import { Sequelize } from "sequelize";
 import { Admin } from "../modules/admin/models/Admin";
 import { CatalogClient } from "../modules/catalog-clients/models/CatalogClient";
 import { CategoryProduct } from "../modules/categories-products/models/CategoryProduct";
+import { MethodPayment } from "../modules/method-payments/models/MethodPayment";
+import { Payment } from "../modules/payments/models/Payment";
 import { Product } from "../modules/products/models/Product";
+import { StatusPayment } from "../modules/status-payments/models/StatusPayment";
 import { User } from "../modules/users/models/User";
 import { env } from "./env";
 
@@ -30,6 +33,9 @@ const models: DatabaseModel[] = [
   CatalogClient,
   CategoryProduct,
   Product,
+  MethodPayment,
+  StatusPayment,
+  Payment,
 ];
 
 export const initializeDatabase = async (): Promise<void> => {

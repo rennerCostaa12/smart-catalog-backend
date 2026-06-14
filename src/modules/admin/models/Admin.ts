@@ -4,6 +4,7 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
   Sequelize,
 } from "sequelize";
 
@@ -20,6 +21,7 @@ export class Admin extends Model<
   declare phone: string;
   declare catalogClientId: number;
   declare passwordHash: string;
+  declare catalogClient?: NonAttribute<CatalogClient>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 

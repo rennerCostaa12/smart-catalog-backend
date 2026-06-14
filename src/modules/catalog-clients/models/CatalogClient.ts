@@ -4,10 +4,12 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
   Sequelize,
 } from "sequelize";
 
 import { Admin } from "../../admin/models/Admin";
+import { Payment } from "../../payments/models/Payment";
 import { Product } from "../../products/models/Product";
 
 export class CatalogClient extends Model<
@@ -18,6 +20,9 @@ export class CatalogClient extends Model<
   declare name: string;
   declare slug: string;
   declare description: CreationOptional<string | null>;
+  declare admins?: NonAttribute<Admin[]>;
+  declare products?: NonAttribute<Product[]>;
+  declare payments?: NonAttribute<Payment[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -61,6 +66,11 @@ export class CatalogClient extends Model<
 
     CatalogClient.hasMany(Product, {
       as: "products",
+      foreignKey: "catalogClientId",
+    });
+
+    CatalogClient.hasMany(Payment, {
+      as: "payments",
       foreignKey: "catalogClientId",
     });
   }

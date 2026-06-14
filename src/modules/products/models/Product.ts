@@ -23,6 +23,7 @@ export class Product extends Model<
   declare categoriesId: number;
   declare catalogClientId: number;
   declare category?: NonAttribute<CategoryProduct>;
+  declare catalogClient?: NonAttribute<CatalogClient>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
