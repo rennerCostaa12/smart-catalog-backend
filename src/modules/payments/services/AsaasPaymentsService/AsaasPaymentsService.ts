@@ -19,7 +19,7 @@ export class AsaasPaymentsService {
     data: CreatePixPaymentDTO,
   ): Promise<AsaasPaymentResponse> {
     const customer = await this.resolveCustomer(data);
-    const { customerData, userId, ...paymentData } = data;
+    const { catalogClientId, customerData, userId, ...paymentData } = data;
 
     return this.asaasHttpClient.post<AsaasPaymentResponse, object>(
       "/payments",
@@ -39,7 +39,7 @@ export class AsaasPaymentsService {
       data,
       this.getCustomerDataFromCreditCardHolder(data),
     );
-    const { customerData, userId, ...paymentData } = data;
+    const { catalogClientId, customerData, userId, ...paymentData } = data;
 
     return this.asaasHttpClient.post<AsaasPaymentResponse, object>(
       "/payments",

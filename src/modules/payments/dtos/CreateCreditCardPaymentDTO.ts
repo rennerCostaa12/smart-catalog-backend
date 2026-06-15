@@ -21,7 +21,8 @@ export type CreditCardHolderInfoDTO = {
 
 export interface CreateCreditCardPaymentDTO {
   customer?: string;
-  userId: string | number;
+  userId: number;
+  catalogClientId: number;
   value: number;
   dueDate: string;
   description?: string;

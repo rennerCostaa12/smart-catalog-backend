@@ -13,8 +13,15 @@ export const createPixPaymentSchema = yup
   .object({
     customer: yup.string(),
     userId: yup
-      .mixed<string | number>()
+      .number()
+      .integer("O campo userId deve ser um número inteiro.")
+      .positive("O campo userId deve ser maior que zero.")
       .required("O campo userId é obrigatório."),
+    catalogClientId: yup
+      .number()
+      .integer("O campo catalogClientId deve ser um número inteiro.")
+      .positive("O campo catalogClientId deve ser maior que zero.")
+      .required("O campo catalogClientId é obrigatório."),
     value: yup
       .number()
       .required("O campo value é obrigatório.")

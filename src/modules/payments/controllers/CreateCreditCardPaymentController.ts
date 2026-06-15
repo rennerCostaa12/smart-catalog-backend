@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { AsaasPaymentsService } from "../services/AsaasPaymentsService/AsaasPaymentsService";
+import { CreatePaymentService } from "../services/CreatePaymentService/CreatePaymentService";
 import { AppError } from "../../../shared/errors/AppError";
 import { AsaasHttpClient } from "../../../shared/integrations/asaas/AsaasHttpClient";
 import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
@@ -11,8 +12,11 @@ export class CreateCreditCardPaymentController {
     try {
       const asaasHttpClient = new AsaasHttpClient();
       const asaasPaymentsService = new AsaasPaymentsService(asaasHttpClient);
+      const createPaymentService = new CreatePaymentService(
+        asaasPaymentsService,
+      );
 
-      const payment = await asaasPaymentsService.createCreditCardPayment(
+      const payment = await createPaymentService.createCreditCardPayment(
         request.body,
       );
 

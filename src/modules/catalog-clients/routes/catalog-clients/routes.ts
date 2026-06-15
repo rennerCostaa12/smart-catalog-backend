@@ -36,6 +36,13 @@ catalogClientsRoutes.get(
 );
 
 catalogClientsRoutes.get(
+  "/slug/:slug",
+  asyncHandler((request, response) =>
+    catalogClientsController.getBySlug(request, response),
+  ),
+);
+
+catalogClientsRoutes.get(
   "/:id",
   asyncHandler((request, response) =>
     catalogClientsController.get(request, response),

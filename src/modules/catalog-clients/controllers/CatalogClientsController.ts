@@ -5,6 +5,7 @@ import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
 import { errorResponse, successResponse } from "../../../shared/http/responses";
 import { CreateCatalogClientService } from "../services/CreateCatalogClientService";
 import { DeleteCatalogClientService } from "../services/DeleteCatalogClientService";
+import { GetCatalogClientBySlugService } from "../services/GetCatalogClientBySlugService";
 import { GetCatalogClientService } from "../services/GetCatalogClientService";
 import { ListCatalogClientsService } from "../services/ListCatalogClientsService";
 import { UpdateCatalogClientService } from "../services/UpdateCatalogClientService";
@@ -45,6 +46,25 @@ export class CatalogClientsController {
     try {
       const catalogClient = await new GetCatalogClientService().execute(
         Number(request.params.id),
+      );
+
+      return successResponse({
+        response,
+        message: "Catálogo encontrado com sucesso.",
+        data: catalogClient,
+      });
+    } catch (error) {
+      return this.handleError(error, response);
+    }
+  }
+
+  public async getBySlug(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    try {
+      const catalogClient = await new GetCatalogClientBySlugService().execute(
+        String(request.params.slug),
       );
 
       return successResponse({
