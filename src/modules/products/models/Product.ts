@@ -10,6 +10,7 @@ import {
 
 import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
 import { CategoryProduct } from "../../categories-products/models/CategoryProduct";
+import { OrderItem } from "../../order-items/models/OrderItem";
 
 export class Product extends Model<
   InferAttributes<Product>,
@@ -24,6 +25,7 @@ export class Product extends Model<
   declare catalogClientId: number;
   declare category?: NonAttribute<CategoryProduct>;
   declare catalogClient?: NonAttribute<CatalogClient>;
+  declare orderItems?: NonAttribute<OrderItem[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -82,6 +84,11 @@ export class Product extends Model<
     Product.belongsTo(CatalogClient, {
       as: "catalogClient",
       foreignKey: "catalogClientId",
+    });
+
+    Product.hasMany(OrderItem, {
+      as: "orderItems",
+      foreignKey: "productId",
     });
   }
 }

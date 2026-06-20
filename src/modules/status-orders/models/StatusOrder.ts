@@ -9,23 +9,19 @@ import {
 } from "sequelize";
 
 import { Order } from "../../orders/models/Order";
-import { Payment } from "../../payments/models/Payment";
 
-export class User extends Model<
-  InferAttributes<User>,
-  InferCreationAttributes<User>
+export class StatusOrder extends Model<
+  InferAttributes<StatusOrder>,
+  InferCreationAttributes<StatusOrder>
 > {
   declare id: CreationOptional<number>;
   declare name: string;
-  declare email: string;
-  declare phone: string;
-  declare payments?: NonAttribute<Payment[]>;
   declare orders?: NonAttribute<Order[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
   public static initialize(sequelize: Sequelize): void {
-    User.init(
+    StatusOrder.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -36,34 +32,21 @@ export class User extends Model<
           type: DataTypes.STRING,
           allowNull: false,
         },
-        email: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        phone: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
       },
       {
         sequelize,
-        tableName: "users",
+        tableName: "status_order",
         underscored: true,
       },
     );
   }
 
   public static associate(): void {
-    User.hasMany(Payment, {
-      as: "payments",
-      foreignKey: "userId",
-    });
-
-    User.hasMany(Order, {
+    StatusOrder.hasMany(Order, {
       as: "orders",
-      foreignKey: "userId",
+      foreignKey: "statusOrderId",
     });
   }
 }

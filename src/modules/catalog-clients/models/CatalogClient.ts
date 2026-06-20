@@ -9,6 +9,7 @@ import {
 } from "sequelize";
 
 import { Admin } from "../../admin/models/Admin";
+import { Order } from "../../orders/models/Order";
 import { Payment } from "../../payments/models/Payment";
 import { Product } from "../../products/models/Product";
 
@@ -23,6 +24,7 @@ export class CatalogClient extends Model<
   declare admins?: NonAttribute<Admin[]>;
   declare products?: NonAttribute<Product[]>;
   declare payments?: NonAttribute<Payment[]>;
+  declare orders?: NonAttribute<Order[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -71,6 +73,11 @@ export class CatalogClient extends Model<
 
     CatalogClient.hasMany(Payment, {
       as: "payments",
+      foreignKey: "catalogClientId",
+    });
+
+    CatalogClient.hasMany(Order, {
+      as: "orders",
       foreignKey: "catalogClientId",
     });
   }
