@@ -31,7 +31,7 @@ export class OrderItem extends Model<
       {
         id: {
           type: DataTypes.UUID,
-          autoIncrement: true,
+          defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
         },
         orderId: {
