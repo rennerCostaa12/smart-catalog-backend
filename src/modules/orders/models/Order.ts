@@ -9,9 +9,11 @@ import {
 } from "sequelize";
 
 import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
+import { MethodPayment } from "../../method-payments/models/MethodPayment";
 import { OrderItem } from "../../order-items/models/OrderItem";
 import { StatusOrder } from "../../status-orders/models/StatusOrder";
 import { User } from "../../users/models/User";
+import { DeliveryMethodEnum } from "../constants";
 
 export class Order extends Model<
   InferAttributes<Order>,
@@ -22,9 +24,12 @@ export class Order extends Model<
   declare catalogClientId: number;
   declare total: number;
   declare statusOrderId: number;
+  declare methodPaymentId: number;
+  declare deliveryMethod: DeliveryMethodEnum;
   declare user?: NonAttribute<User>;
   declare catalogClient?: NonAttribute<CatalogClient>;
   declare statusOrder?: NonAttribute<StatusOrder>;
+  declare methodPayment?: NonAttribute<MethodPayment>;
   declare items?: NonAttribute<OrderItem[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -56,6 +61,16 @@ export class Order extends Model<
           allowNull: false,
           field: "status_order_id",
         },
+        methodPaymentId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          field: "method_payment_id",
+        },
+        deliveryMethod: {
+          type: DataTypes.ENUM("RETIRADA", "ENTREGA"),
+          allowNull: false,
+          field: "delivery_method",
+        },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
       },
@@ -81,6 +96,11 @@ export class Order extends Model<
     Order.belongsTo(StatusOrder, {
       as: "statusOrder",
       foreignKey: "statusOrderId",
+    });
+
+    Order.belongsTo(MethodPayment, {
+      as: "methodPayment",
+      foreignKey: "methodPaymentId",
     });
 
     Order.hasMany(OrderItem, {

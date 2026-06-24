@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { DeliveryMethodEnum } from "../constants";
 
 export const updateOrderSchema = yup
   .object({
@@ -15,6 +16,18 @@ export const updateOrderSchema = yup
       .number()
       .integer("O campo statusOrderId deve ser um número inteiro.")
       .positive("O campo statusOrderId deve ser maior que zero.")
+      .optional(),
+    methodPaymentId: yup
+      .number()
+      .integer("O campo methodPaymentId deve ser um número inteiro.")
+      .positive("O campo methodPaymentId deve ser maior que zero.")
+      .optional(),
+    deliveryMethod: yup
+      .mixed<DeliveryMethodEnum>()
+      .oneOf(
+        Object.values(DeliveryMethodEnum),
+        "O campo deliveryMethod deve ser RETIRADA ou ENTREGA.",
+      )
       .optional(),
   })
   .test(

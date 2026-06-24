@@ -21,6 +21,8 @@ export class GetOrderService {
       catalogClientId: order?.catalogClientId,
       total: Number(order?.total),
       statusOrderId: order?.statusOrderId,
+      methodPaymentId: order?.methodPaymentId,
+      deliveryMethod: order?.deliveryMethod,
       createdAt: order?.createdAt,
       updatedAt: order?.updatedAt,
     };

@@ -54,6 +54,8 @@ export class CreateOrderService {
       catalogClientId: order?.catalogClientId,
       total: Number(order?.total),
       statusOrderId: order?.statusOrderId,
+      methodPaymentId: order?.methodPaymentId,
+      deliveryMethod: order?.deliveryMethod,
       items: listOrderItems,
       createdAt: order?.createdAt,
       updatedAt: order?.updatedAt,

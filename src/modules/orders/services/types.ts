@@ -1,3 +1,5 @@
+import { DeliveryMethodEnum } from "../constants";
+
 export enum StatusOrderNameEnum {
   PENDENTE = "PENDENTE",
   CONFIRMADO = "CONFIRMADO",
@@ -6,6 +8,11 @@ export enum StatusOrderNameEnum {
   PRONTO_PARA_RETIRADA = "PRONTO PARA RETIRADA",
   ENTREGUE = "ENTREGUE",
 }
+
+type MethodPaymentItem = {
+  name: string;
+  description: string | null;
+};
 
 type ProductItem = {
   name: string;
@@ -35,6 +42,9 @@ export type OrderResponse = {
   catalogClientId: number;
   total: number;
   statusOrderId: number;
+  methodPaymentId: number;
+  deliveryMethod: DeliveryMethodEnum;
+  methodPayment?: MethodPaymentItem | null;
   statusOrder: {
     name: StatusOrderNameEnum;
   };

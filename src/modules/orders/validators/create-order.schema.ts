@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import { createOrderItemSchema } from "../../order-items/validators/create-order-item.schema";
+import { DeliveryMethodEnum } from "../constants";
 
 export const createOrderSchema = yup.object({
   catalogClientId: yup
@@ -16,6 +17,18 @@ export const createOrderSchema = yup.object({
     .integer("O campo statusOrderId deve ser um número inteiro.")
     .positive("O campo statusOrderId deve ser maior que zero.")
     .required("O campo statusOrderId é obrigatório."),
+  methodPaymentId: yup
+    .number()
+    .integer("O campo methodPaymentId deve ser um número inteiro.")
+    .positive("O campo methodPaymentId deve ser maior que zero.")
+    .required("O campo methodPaymentId é obrigatório."),
+  deliveryMethod: yup
+    .mixed<DeliveryMethodEnum>()
+    .oneOf(
+      Object.values(DeliveryMethodEnum),
+      "O campo deliveryMethod deve ser RETIRADA ou ENTREGA.",
+    )
+    .required("O campo deliveryMethod é obrigatório."),
   items: yup
     .array()
     .of(createOrderItemSchema)

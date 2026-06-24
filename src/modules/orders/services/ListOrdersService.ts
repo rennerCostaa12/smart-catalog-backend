@@ -1,5 +1,6 @@
 import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
 import { CategoryProduct } from "../../categories-products/models/CategoryProduct";
+import { MethodPayment } from "../../method-payments/models/MethodPayment";
 import { OrderItem } from "../../order-items/models/OrderItem";
 import { Product } from "../../products/models/Product";
 import { StatusOrder } from "../../status-orders/models/StatusOrder";
@@ -40,6 +41,11 @@ export class ListOrdersService {
           as: "statusOrder",
           attributes: ["name"],
         },
+        {
+          model: MethodPayment,
+          as: "methodPayment",
+          attributes: ["name", "description"],
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -74,6 +80,14 @@ export class ListOrdersService {
           };
         }),
         statusOrderId: ordersData?.statusOrderId,
+        methodPaymentId: ordersData?.methodPaymentId,
+        deliveryMethod: ordersData?.deliveryMethod,
+        methodPayment: ordersData.methodPayment
+          ? {
+              name: ordersData.methodPayment.name,
+              description: ordersData.methodPayment.description,
+            }
+          : null,
         statusOrder: {
           name: ordersData.statusOrder?.name as StatusOrderNameEnum,
         },
