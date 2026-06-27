@@ -15,9 +15,7 @@ const encodeBase64Url = (value: object): string => {
 };
 
 const sign = (data: string): string => {
-  return createHmac("sha256", env.auth.secret)
-    .update(data)
-    .digest("base64url");
+  return createHmac("sha256", env.auth.secret).update(data).digest("base64url");
 };
 
 export const generateAuthToken = (
