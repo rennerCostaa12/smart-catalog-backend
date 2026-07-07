@@ -10,6 +10,7 @@ import {
 } from "../../../../shared/security/password-hash";
 
 import { AuthResponse } from "./types";
+import { CatalogClient } from "../../../catalog-clients/models/CatalogClient";
 
 export class AdminAuthService {
   public async register(data: RegisterAdminDTO): Promise<AuthResponse> {
@@ -34,7 +35,15 @@ export class AdminAuthService {
   }
 
   public async login(data: LoginAdminDTO): Promise<AuthResponse> {
-    const admin = await Admin.findOne({ where: { email: data.email } });
+    const admin = await Admin.findOne({
+      where: { email: data.email },
+      include: [
+        {
+          model: CatalogClient,
+          as: "catalogClient",
+        },
+      ],
+    });
 
     if (!admin) {
       throw new AppError("Credenciais inválidas.", HttpStatusCode.UNAUTHORIZED);
@@ -53,16 +62,17 @@ export class AdminAuthService {
   }
 
   private buildAuthResponse(admin: Admin): AuthResponse {
+    console.log("admin", admin.catalogClient);
     return {
       admin: {
-        id: admin.id,
-        name: admin.name,
-        document: admin.document,
-        email: admin.email,
-        phone: admin.phone,
-        catalogClientId: admin.catalogClientId,
+        id: admin?.id,
+        name: admin?.name,
+        document: admin?.document,
+        email: admin?.email,
+        phone: admin?.phone,
+        catalogClientSlug: admin?.catalogClient?.slug,
       },
-      token: generateAuthToken({ sub: admin.id, role: "admin" }),
+      token: generateAuthToken({ sub: admin?.id, role: "admin" }),
     };
   }
 }

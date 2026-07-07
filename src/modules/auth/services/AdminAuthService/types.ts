@@ -4,7 +4,7 @@ type AdminResponse = {
   document: string;
   email: string;
   phone: string;
-  catalogClientId: number;
+  catalogClientSlug: string | undefined;
 };
 
 export type AuthResponse = {
