@@ -1,4 +1,4 @@
-import { WhereOptions } from "sequelize";
+import { Op, WhereOptions } from "sequelize";
 
 import { Product } from "../models/Product";
 import { CategoryProduct } from "../../categories-products/models/CategoryProduct";
@@ -16,6 +16,7 @@ export class ListProductsByCatalogClientService {
     categoriesId,
     page,
     limit,
+    searchProduct,
   }: ListProductsByCatalogClientParams): Promise<PaginatedProductsResponse> {
     const responseCatalogClient = await CatalogClient.findOne({
       where: {
@@ -38,6 +39,14 @@ export class ListProductsByCatalogClientService {
       where.categoriesId = categoriesId;
     }
 
+    const normalizedSearchProduct = searchProduct?.trim();
+
+    if (normalizedSearchProduct) {
+      where.name = {
+        [Op.like]: `%${normalizedSearchProduct}%`,
+      };
+    }
+
     const { rows, count } = await Product.findAndCountAll({
       where,
       order: [["createdAt", "DESC"]],
@@ -54,16 +63,17 @@ export class ListProductsByCatalogClientService {
     return {
       products: rows.map((productData) => {
         return {
-          id: productData.id,
-          name: productData.name,
-          description: productData.description,
-          value: Number(productData.value),
-          imageUrl: productData.imageUrl,
-          categoriesId: productData.categoriesId,
-          catalogClientId: productData.catalogClientId,
+          id: productData?.id,
+          name: productData?.name,
+          description: productData?.description,
+          value: Number(productData?.value),
+          imageUrl: productData?.imageUrl,
+          categoriesId: productData?.categoriesId,
+          isActive: productData?.isActive,
+          catalogClientId: productData?.catalogClientId,
           categoryName: productData?.category?.name,
-          createdAt: productData.createdAt,
-          updatedAt: productData.updatedAt,
+          createdAt: productData?.createdAt,
+          updatedAt: productData?.updatedAt,
         };
       }),
       pagination: {

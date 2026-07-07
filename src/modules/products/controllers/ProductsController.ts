@@ -47,6 +47,10 @@ export class ProductsController {
   ): Promise<Response> {
     try {
       const catalogClientName = String(request?.params?.catalog_client_name);
+      const searchProduct =
+        typeof request?.query?.search === "string"
+          ? request.query.search
+          : undefined;
       const page = Number(request?.query?.page ?? DEFAULT_INITIAL_PAGE);
       const limit = Number(request?.query?.limit ?? DEFAULT_PAGINATION_LIMIT);
       const categoriesId =
@@ -66,6 +70,7 @@ export class ProductsController {
         categoriesId,
         page,
         limit,
+        searchProduct,
       });
 
       return successResponse({

@@ -23,6 +23,7 @@ export class Product extends Model<
   declare imageUrl: CreationOptional<string | null>;
   declare categoriesId: number;
   declare catalogClientId: number;
+  declare isActive: CreationOptional<boolean>;
   declare category?: NonAttribute<CategoryProduct>;
   declare catalogClient?: NonAttribute<CatalogClient>;
   declare orderItems?: NonAttribute<OrderItem[]>;
@@ -63,6 +64,12 @@ export class Product extends Model<
           type: DataTypes.INTEGER,
           allowNull: false,
           field: "catalog_client_id",
+        },
+        isActive: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true,
+          field: "is_active",
         },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,

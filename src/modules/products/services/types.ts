@@ -16,6 +16,7 @@ export type ListProductsByCatalogClientParams = {
   categoriesId?: number;
   page: number;
   limit: number;
+  searchProduct?: string;
 };
 
 export type PaginatedProductsResponse = {
