@@ -62,7 +62,6 @@ export class AdminAuthService {
   }
 
   private buildAuthResponse(admin: Admin): AuthResponse {
-    console.log("admin", admin.catalogClient);
     return {
       admin: {
         id: admin?.id,
@@ -70,7 +69,10 @@ export class AdminAuthService {
         document: admin?.document,
         email: admin?.email,
         phone: admin?.phone,
-        catalogClientSlug: admin?.catalogClient?.slug,
+        catalogClient: {
+          id: admin?.catalogClient?.id,
+          slug: admin?.catalogClient?.slug,
+        },
       },
       token: generateAuthToken({ sub: admin?.id, role: "admin" }),
     };

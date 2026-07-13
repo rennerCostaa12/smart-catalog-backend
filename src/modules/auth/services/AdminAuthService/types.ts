@@ -4,7 +4,10 @@ type AdminResponse = {
   document: string;
   email: string;
   phone: string;
-  catalogClientSlug: string | undefined;
+  catalogClient: {
+    id?: number;
+    slug?: string;
+  };
 };
 
 export type AuthResponse = {
