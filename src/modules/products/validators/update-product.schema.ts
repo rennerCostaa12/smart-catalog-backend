@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { allowedImageTypes, maxFileSize } from "./constants";
 
 export const updateProductSchema = yup
   .object({
@@ -8,12 +9,19 @@ export const updateProductSchema = yup
       .number()
       .positive("O campo value deve ser maior que zero.")
       .optional(),
-    imageUrl: yup
-      .string()
-      .trim()
-      .url("O campo imageUrl deve conter uma URL válida.")
-      .nullable()
-      .optional(),
+    image: yup
+      .mixed<Express.Multer.File>()
+      .optional()
+      .test("fileType", "Formato inválido. Use JPG, PNG ou WEBP", (file) => {
+        if (!file) return true;
+
+        return allowedImageTypes.includes(file.mimetype);
+      })
+      .test("fileSize", "A imagem deve ter no máximo 2MB", (file) => {
+        if (!file) return true;
+
+        return file.size <= maxFileSize;
+      }),
     categoriesId: yup
       .number()
       .integer("O campo categoriesId deve ser um número inteiro.")
@@ -24,6 +32,7 @@ export const updateProductSchema = yup
       .integer("O campo catalogClientId deve ser um número inteiro.")
       .positive("O campo catalogClientId deve ser maior que zero.")
       .optional(),
+    isActive: yup.boolean().optional()
   })
   .test(
     "has-fields",

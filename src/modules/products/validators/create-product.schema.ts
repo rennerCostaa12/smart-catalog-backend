@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { allowedImageTypes, maxFileSize } from "./constants";
 
 export const createProductSchema = yup.object({
   name: yup.string().trim().required("O campo name é obrigatório."),
@@ -7,12 +8,19 @@ export const createProductSchema = yup.object({
     .number()
     .positive("O campo value deve ser maior que zero.")
     .required("O campo value é obrigatório."),
-  imageUrl: yup
-    .string()
-    .trim()
-    .url("O campo imageUrl deve conter uma URL válida.")
-    .nullable()
-    .optional(),
+  image: yup
+    .mixed<Express.Multer.File>()
+    .required("O campo image é obrigatório")
+    .test("fileType", "Formato inválido. Use JPG, PNG ou WEBP", (file) => {
+      if (!file) return false;
+
+      return allowedImageTypes.includes(file.mimetype);
+    })
+    .test("fileSize", "A imagem deve ter no máximo 2MB", (file) => {
+      if (!file) return false;
+
+      return file?.size <= maxFileSize;
+    }),
   categoriesId: yup
     .number()
     .integer("O campo categoriesId deve ser um número inteiro.")
@@ -23,4 +31,5 @@ export const createProductSchema = yup.object({
     .integer("O campo catalogClientId deve ser um número inteiro.")
     .positive("O campo catalogClientId deve ser maior que zero.")
     .required("O campo catalogClientId é obrigatório."),
+  isActive: yup.boolean().optional()
 });

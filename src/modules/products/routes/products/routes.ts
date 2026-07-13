@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
+import multer from "multer";
 
 import { requireAdminAuth } from "../../../../shared/middlewares/require-admin-auth";
 import { validateSchema } from "../../../../shared/middlewares/validate-schema";
@@ -6,6 +7,7 @@ import { ProductsController } from "../../controllers/ProductsController";
 import { createProductSchema } from "../../validators/create-product.schema";
 import { updateProductSchema } from "../../validators/update-product.schema";
 import { AsyncRouteHandler } from "./types";
+import { appendUploadedImageToBody } from "../../../../utils/add-upload-image-body";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>
@@ -14,6 +16,7 @@ const asyncHandler =
   };
 
 const productsController = new ProductsController();
+const productImageUpload = multer({ storage: multer.memoryStorage() });
 
 export const productsRoutes = Router();
 
@@ -28,6 +31,8 @@ productsRoutes.use(requireAdminAuth);
 
 productsRoutes.post(
   "/",
+  productImageUpload.single("image"),
+  appendUploadedImageToBody,
   asyncHandler(validateSchema(createProductSchema)),
   asyncHandler((request, response) =>
     productsController.create(request, response),
@@ -50,6 +55,8 @@ productsRoutes.get(
 
 productsRoutes.put(
   "/:id",
+  productImageUpload.single("image"),
+  appendUploadedImageToBody,
   asyncHandler(validateSchema(updateProductSchema)),
   asyncHandler((request, response) =>
     productsController.update(request, response),
@@ -58,6 +65,8 @@ productsRoutes.put(
 
 productsRoutes.patch(
   "/:id",
+  productImageUpload.single("image"),
+  appendUploadedImageToBody,
   asyncHandler(validateSchema(updateProductSchema)),
   asyncHandler((request, response) =>
     productsController.update(request, response),
