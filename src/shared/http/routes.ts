@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { authRoutes } from "../../modules/auth/routes/auth/routes";
 import { catalogClientsRoutes } from "../../modules/catalog-clients/routes/catalog-clients/routes";
+import { categoriesProductsRoutes } from "../../modules/categories-products/routes/categories-products/routes";
 import { ordersRoutes } from "../../modules/orders/routes/orders/routes";
 import { paymentsRoutes } from "../../modules/payments/routes/payments/routes";
 import { productsRoutes } from "../../modules/products/routes/products/routes";
@@ -24,5 +25,6 @@ routes.use("/api/payments", paymentsRoutes);
 routes.use("/api/auth", authRoutes);
 routes.use("/api/users", usersRoutes);
 routes.use("/api/products", productsRoutes);
+routes.use("/api/categories-products", categoriesProductsRoutes);
 routes.use("/api/catalog-clients", catalogClientsRoutes);
 routes.use("/api/orders", ordersRoutes);
