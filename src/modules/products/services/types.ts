@@ -6,6 +6,7 @@ export type ProductResponse = {
   imageUrl: string | null;
   categoriesId: number;
   catalogClientId: number;
+  isActive: boolean;
   categoryName?: string;
   createdAt: Date;
   updatedAt: Date;

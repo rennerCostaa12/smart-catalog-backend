@@ -5,6 +5,7 @@ import { requireAdminAuth } from "../../../../shared/middlewares/require-admin-a
 import { validateSchema } from "../../../../shared/middlewares/validate-schema";
 import { ProductsController } from "../../controllers/ProductsController";
 import { createProductSchema } from "../../validators/create-product.schema";
+import { updateProductStatusSchema } from "../../validators/update-product-status.schema";
 import { updateProductSchema } from "../../validators/update-product.schema";
 import { AsyncRouteHandler } from "./types";
 import { appendUploadedImageToBody } from "../../../../utils/add-upload-image-body";
@@ -60,6 +61,14 @@ productsRoutes.put(
   asyncHandler(validateSchema(updateProductSchema)),
   asyncHandler((request, response) =>
     productsController.update(request, response),
+  ),
+);
+
+productsRoutes.patch(
+  "/:id/status",
+  asyncHandler(validateSchema(updateProductStatusSchema)),
+  asyncHandler((request, response) =>
+    productsController.updateStatus(request, response),
   ),
 );
 

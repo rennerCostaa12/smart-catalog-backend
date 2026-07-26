@@ -16,6 +16,7 @@ export class ListProductsService {
         imageUrl: productsData.imageUrl,
         categoriesId: productsData.categoriesId,
         catalogClientId: productsData.catalogClientId,
+        isActive: productsData.isActive,
         createdAt: productsData.createdAt,
         updatedAt: productsData.updatedAt,
       };

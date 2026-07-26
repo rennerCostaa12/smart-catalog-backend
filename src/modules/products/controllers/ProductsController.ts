@@ -9,6 +9,7 @@ import { GetProductService } from "../services/GetProductService";
 import { ListProductsByCatalogClientService } from "../services/ListProductsByCatalogClientService";
 import { ListProductsService } from "../services/ListProductsService";
 import { UpdateProductService } from "../services/UpdateProductService";
+import { UpdateProductStatusService } from "../services/UpdateProductStatusService";
 import { DEFAULT_INITIAL_PAGE, DEFAULT_PAGINATION_LIMIT } from "../constants";
 
 export class ProductsController {
@@ -109,6 +110,26 @@ export class ProductsController {
       return successResponse({
         response,
         message: "Produto atualizado com sucesso.",
+        data: product,
+      });
+    } catch (error) {
+      return this.handleError(error, response);
+    }
+  }
+
+  public async updateStatus(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    try {
+      const product = await new UpdateProductStatusService().execute(
+        Number(request.params.id),
+        request.body,
+      );
+
+      return successResponse({
+        response,
+        message: "Status do produto atualizado com sucesso.",
         data: product,
       });
     } catch (error) {
