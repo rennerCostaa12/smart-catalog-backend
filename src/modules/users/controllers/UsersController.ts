@@ -4,8 +4,6 @@ import { CreateUserService } from "../services/CreateUserService";
 import { AppError } from "../../../shared/errors/AppError";
 import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
 import { errorResponse, successResponse } from "../../../shared/http/responses";
-import { verifyAuthToken } from "../../../shared/security/auth-token";
-import { getBearerToken } from "../../../utils/get-bearer-token";
 import { UpdateUserService } from "../services/UpdateUserService";
 
 export class UsersController {
@@ -42,7 +40,7 @@ export class UsersController {
       const updateUserService = new UpdateUserService();
 
       const userId = Number(request?.params?.userId);
-      const authorization = request.headers.authorization;
+      const authorization = request.cookies.access_token;
 
       const userUpdated = await updateUserService.execute(
         request?.body,

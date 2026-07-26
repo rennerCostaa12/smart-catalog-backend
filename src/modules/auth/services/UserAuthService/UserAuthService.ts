@@ -5,10 +5,12 @@ import { AppError } from "../../../../shared/errors/AppError";
 import { HttpStatusCode } from "../../../../shared/http/HttpStatusCode";
 import { generateAuthToken } from "../../../../shared/security/auth-token";
 
-import { AuthResponse } from "./types";
+import { AuthResponse, UserResponse } from "./types";
+import { Response } from "express";
+import { ROLE_USERS_ENUM } from "../../../../types/roles";
 
 export class UserAuthService {
-  public async register(data: RegisterUserDTO): Promise<AuthResponse> {
+  public async register(data: RegisterUserDTO): Promise<UserResponse> {
     const userAlreadyExists = await User.findOne({
       where: { email: data.email },
     });
@@ -23,28 +25,38 @@ export class UserAuthService {
       phone: data.phone,
     });
 
-    return this.buildAuthResponse(user);
+    return {
+      id: user?.id,
+      name: user?.name,
+      email: user?.email,
+      phone: user?.phone,
+    };
   }
 
-  public async login(data: LoginUserDTO): Promise<AuthResponse> {
+  public async login(
+    data: LoginUserDTO,
+    response: Response,
+  ): Promise<AuthResponse> {
     const user = await User.findOne({ where: { email: data.email } });
 
     if (!user) {
       throw new AppError("Credenciais inválidas.", HttpStatusCode.UNAUTHORIZED);
     }
 
-    return this.buildAuthResponse(user);
+    return this.buildAuthResponse(user, response);
   }
 
-  private buildAuthResponse(user: User): AuthResponse {
-    return {
+  private buildAuthResponse(user: User, response: Response): AuthResponse {
+    const responseAuth = {
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
         phone: user.phone,
       },
-      token: generateAuthToken({ sub: user.id, role: "user" }),
+      token: generateAuthToken({ sub: user.id, role: ROLE_USERS_ENUM.USER }, response),
     };
+
+    return responseAuth;
   }
 }

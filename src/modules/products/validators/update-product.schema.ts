@@ -32,7 +32,7 @@ export const updateProductSchema = yup
       .integer("O campo catalogClientId deve ser um número inteiro.")
       .positive("O campo catalogClientId deve ser maior que zero.")
       .optional(),
-    isActive: yup.boolean().optional()
+    isActive: yup.boolean().optional(),
   })
   .test(
     "has-fields",

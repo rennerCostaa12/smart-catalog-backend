@@ -1,4 +1,4 @@
-type AdminResponse = {
+export type AdminResponse = {
   id: number;
   name: string;
   document: string;

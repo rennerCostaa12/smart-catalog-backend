@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
 
-import { UserAuthService } from "../services/UserAuthService/UserAuthService";
+import { AuthService } from "../services/AuthService/AuthService";
 import { AppError } from "../../../shared/errors/AppError";
 import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
 import { errorResponse, successResponse } from "../../../shared/http/responses";
 
-export class LoginUserController {
+export class LogoutController {
   public async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const userAuthService = new UserAuthService();
-      const auth = await userAuthService.login(request.body, response);
+      const authService = new AuthService();
+      const responseService = await authService.logout(response);
 
       return successResponse({
-        response,
-        message: "Login de usuário realizado com sucesso.",
-        data: auth,
+        response: responseService,
+        statusCode: HttpStatusCode.OK,
+        message: "Logout efetuado com sucesso.",
       });
     } catch (error) {
       if (error instanceof AppError) {

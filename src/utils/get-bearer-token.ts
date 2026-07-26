@@ -1,3 +1,3 @@
 export const getBearerToken = (authorization?: string): string | undefined => {
-  return authorization?.match(/^Bearer ([^\s]+)$/i)?.[1];
+  return authorization?.match(/^([^\s]+)$/i)?.[1];
 };

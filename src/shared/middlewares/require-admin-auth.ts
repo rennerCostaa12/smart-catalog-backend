@@ -3,15 +3,15 @@ import { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/AppError";
 import { HttpStatusCode } from "../http/HttpStatusCode";
 import { verifyAuthToken } from "../security/auth-token";
-import { getBearerToken } from "../../utils/get-bearer-token";
+import { getRequestAuthToken } from "../../utils/get-auth-token";
+import { ROLE_USERS_ENUM } from "../../types/roles";
 
 export const requireAdminAuth = (
   request: Request,
   _response: Response,
   next: NextFunction,
 ): void => {
-  const authorization = request.headers.authorization;
-  const token = getBearerToken(authorization);
+  const token = getRequestAuthToken(request);
 
   if (!token) {
     next(
@@ -35,7 +35,7 @@ export const requireAdminAuth = (
     return;
   }
 
-  if (payload.role !== "admin") {
+  if (payload.role !== ROLE_USERS_ENUM.ADMIN) {
     next(
       new AppError(
         "Acesso permitido somente para administradores.",

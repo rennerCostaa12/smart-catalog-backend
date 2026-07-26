@@ -2,8 +2,10 @@ import { UpdateUserDTO } from "../dtos/UpdateUserDTO";
 import { User } from "../models/User";
 import { AppError } from "../../../shared/errors/AppError";
 import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
-import { getBearerToken } from "../../../utils/get-bearer-token";
+import { getAuthToken } from "../../../utils/get-auth-token";
 import { verifyAuthToken } from "../../../shared/security/auth-token";
+
+import { ROLE_USERS_ENUM } from "../../../types/roles";
 
 type UpdateUserResponse = {
   name: string;
@@ -17,7 +19,7 @@ export class UpdateUserService {
     userId: number,
     authorizationToken: string | undefined,
   ): Promise<UpdateUserResponse> {
-    const token = getBearerToken(authorizationToken);
+    const token = getAuthToken(authorizationToken);
     const authPayload = token ? verifyAuthToken(token) : null;
 
     if (!authPayload) {
@@ -27,7 +29,7 @@ export class UpdateUserService {
       );
     }
 
-    if (authPayload?.role === "user" && authPayload?.sub !== userId) {
+    if (authPayload?.role === ROLE_USERS_ENUM.USER && authPayload?.sub !== userId) {
       throw new AppError(
         "Usuário não autorizado a atualizar esses dados.",
         HttpStatusCode.FORBIDDEN,

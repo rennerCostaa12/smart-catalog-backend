@@ -9,7 +9,7 @@ export class LoginAdminController {
   public async handle(request: Request, response: Response): Promise<Response> {
     try {
       const adminAuthService = new AdminAuthService();
-      const auth = await adminAuthService.login(request.body);
+      const auth = await adminAuthService.login(request.body, response);
 
       return successResponse({
         response,

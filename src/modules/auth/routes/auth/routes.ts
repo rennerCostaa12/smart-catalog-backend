@@ -4,12 +4,14 @@ import { LoginAdminController } from "../../controllers/LoginAdminController";
 import { LoginUserController } from "../../controllers/LoginUserController";
 import { RegisterAdminController } from "../../controllers/RegisterAdminController";
 import { RegisterUserController } from "../../controllers/RegisterUserController";
+import { MeController } from "../../controllers/MeController";
 import { loginSchema } from "../../validators/login.schema";
 import { loginUserSchema } from "../../validators/login-user.schema";
 import { registerAdminSchema } from "../../validators/register-admin.schema";
 import { registerUserSchema } from "../../validators/register-user.schema";
 import { validateSchema } from "../../../../shared/middlewares/validate-schema";
 import { AsyncRouteHandler } from "./types";
+import { LogoutController } from "../../controllers/LogoutController";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>
@@ -21,6 +23,8 @@ const registerUserController = new RegisterUserController();
 const loginUserController = new LoginUserController();
 const registerAdminController = new RegisterAdminController();
 const loginAdminController = new LoginAdminController();
+const logoutController = new LogoutController();
+const meController = new MeController();
 
 export const authRoutes = Router();
 
@@ -53,5 +57,17 @@ authRoutes.post(
   asyncHandler(validateSchema(loginSchema)),
   asyncHandler((request, response) =>
     loginAdminController.handle(request, response),
+  ),
+);
+
+authRoutes.get(
+  "/me",
+  asyncHandler((request, response) => meController.handle(request, response)),
+);
+
+authRoutes.post(
+  "/logout",
+  asyncHandler((request, response) =>
+    logoutController.handle(request, response),
   ),
 );

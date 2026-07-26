@@ -9,11 +9,12 @@ import {
   hashPassword,
 } from "../../../../shared/security/password-hash";
 
-import { AuthResponse } from "./types";
+import { AdminResponse, AuthResponse } from "./types";
 import { CatalogClient } from "../../../catalog-clients/models/CatalogClient";
-
+import { Response } from "express";
+import { ROLE_USERS_ENUM } from "../../../../types/roles";
 export class AdminAuthService {
-  public async register(data: RegisterAdminDTO): Promise<AuthResponse> {
+  public async register(data: RegisterAdminDTO): Promise<AdminResponse> {
     const adminAlreadyExists = await Admin.findOne({
       where: { email: data.email },
     });
@@ -31,10 +32,23 @@ export class AdminAuthService {
       passwordHash: await hashPassword(data.password),
     });
 
-    return this.buildAuthResponse(admin);
+    return {
+      id: admin?.id,
+      email: admin?.email,
+      name: admin?.name,
+      phone: admin?.phone,
+      catalogClient: {
+        id: admin?.catalogClient?.id,
+        slug: admin?.catalogClient?.slug,
+      },
+      document: admin?.document,
+    };
   }
 
-  public async login(data: LoginAdminDTO): Promise<AuthResponse> {
+  public async login(
+    data: LoginAdminDTO,
+    response: Response,
+  ): Promise<AuthResponse> {
     const admin = await Admin.findOne({
       where: { email: data.email },
       include: [
@@ -58,10 +72,10 @@ export class AdminAuthService {
       throw new AppError("Credenciais inválidas.", HttpStatusCode.UNAUTHORIZED);
     }
 
-    return this.buildAuthResponse(admin);
+    return this.buildAuthResponse(admin, response);
   }
 
-  private buildAuthResponse(admin: Admin): AuthResponse {
+  private buildAuthResponse(admin: Admin, response: Response): AuthResponse {
     return {
       admin: {
         id: admin?.id,
@@ -74,7 +88,7 @@ export class AdminAuthService {
           slug: admin?.catalogClient?.slug,
         },
       },
-      token: generateAuthToken({ sub: admin?.id, role: "admin" }),
+      token: generateAuthToken({ sub: admin?.id, role: ROLE_USERS_ENUM.ADMIN }, response),
     };
   }
 }

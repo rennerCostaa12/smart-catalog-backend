@@ -3,15 +3,14 @@ import { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/AppError";
 import { HttpStatusCode } from "../http/HttpStatusCode";
 import { verifyAuthToken } from "../security/auth-token";
-import { getBearerToken } from "../../utils/get-bearer-token";
+import { getRequestAuthToken } from "../../utils/get-auth-token";
 
 export const requireAuth = (
   request: Request,
   _response: Response,
   next: NextFunction,
 ): void => {
-  const authorization = request.headers.authorization;
-  const token = getBearerToken(authorization);
+  const token = getRequestAuthToken(request);
 
   if (!token) {
     next(

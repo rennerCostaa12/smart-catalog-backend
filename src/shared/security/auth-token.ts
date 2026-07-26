@@ -1,14 +1,15 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
 import { env } from "../../config/env";
+import { Response } from "express";
+import { TOKEN_TTL_IN_MILLISECONDS, TOKEN_TTL_IN_SECONDS } from "./constants";
+import { ROLE_USERS_ENUM } from "../../types/roles";
 
 export type AuthTokenPayload = {
   sub: number;
-  role: "user" | "admin";
+  role: ROLE_USERS_ENUM;
   exp: number;
 };
-
-const TOKEN_TTL_IN_SECONDS = 60 * 60 * 24;
 
 const encodeBase64Url = (value: object): string => {
   return Buffer.from(JSON.stringify(value)).toString("base64url");
@@ -20,6 +21,7 @@ const sign = (data: string): string => {
 
 export const generateAuthToken = (
   payload: Omit<AuthTokenPayload, "exp">,
+  response: Response,
 ): string => {
   const header = encodeBase64Url({ alg: "HS256", typ: "JWT" });
   const body = encodeBase64Url({
@@ -28,7 +30,17 @@ export const generateAuthToken = (
   });
   const signature = sign(`${header}.${body}`);
 
-  return `${header}.${body}.${signature}`;
+  const token = `${header}.${body}.${signature}`;
+
+  response.cookie("access_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: TOKEN_TTL_IN_MILLISECONDS,
+    path: "/",
+  });
+
+  return token;
 };
 
 export const verifyAuthToken = (token: string): AuthTokenPayload | null => {
@@ -63,7 +75,8 @@ export const verifyAuthToken = (token: string): AuthTokenPayload | null => {
     if (
       !Number.isInteger(payload.sub) ||
       payload.sub! <= 0 ||
-      (payload.role !== "user" && payload.role !== "admin") ||
+      (payload.role !== ROLE_USERS_ENUM.USER &&
+        payload.role !== ROLE_USERS_ENUM.ADMIN) ||
       !Number.isInteger(payload.exp) ||
       payload.exp! <= Math.floor(Date.now() / 1000)
     ) {
