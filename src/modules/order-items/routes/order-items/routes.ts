@@ -7,7 +7,7 @@
 // import { OrderItemsController } from "../../controllers/OrderItemsController";
 // import { createOrderItemSchema } from "../../validators/create-order-item.schema";
 // import { updateOrderItemSchema } from "../../validators/update-order-item.schema";
-// import { AsyncRouteHandler } from "./types";
+// import { AsyncRouteHandler } from "../../../../types/async_route_handler";
 
 // const asyncHandler =
 //   (handler: AsyncRouteHandler) =>

@@ -10,8 +10,8 @@ import { loginUserSchema } from "../../validators/login-user.schema";
 import { registerAdminSchema } from "../../validators/register-admin.schema";
 import { registerUserSchema } from "../../validators/register-user.schema";
 import { validateSchema } from "../../../../shared/middlewares/validate-schema";
-import { AsyncRouteHandler } from "./types";
 import { LogoutController } from "../../controllers/LogoutController";
+import { AsyncRouteHandler } from "../../../../types/async_route_handler";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>

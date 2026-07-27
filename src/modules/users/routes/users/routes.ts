@@ -5,7 +5,7 @@ import { createUserSchema } from "../../validators/create-user.schema";
 import { updateUserSchema } from "../../validators/update-user.schema";
 import { requireAuth } from "../../../../shared/middlewares/require-auth";
 import { validateSchema } from "../../../../shared/middlewares/validate-schema";
-import { AsyncRouteHandler } from "./types";
+import { AsyncRouteHandler } from "../../../../types/async_route_handler";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>

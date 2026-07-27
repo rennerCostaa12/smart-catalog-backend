@@ -7,7 +7,7 @@ import { ProductsController } from "../../controllers/ProductsController";
 import { createProductSchema } from "../../validators/create-product.schema";
 import { updateProductStatusSchema } from "../../validators/update-product-status.schema";
 import { updateProductSchema } from "../../validators/update-product.schema";
-import { AsyncRouteHandler } from "./types";
+import { AsyncRouteHandler } from "../../../../types/async_route_handler";
 import { appendUploadedImageToBody } from "../../../../utils/add-upload-image-body";
 
 const asyncHandler =

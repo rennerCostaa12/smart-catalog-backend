@@ -6,6 +6,7 @@ import { AppError } from "../../../shared/errors/AppError";
 import { Payment } from "../../../modules/payments/models/Payment";
 import { StatusPayment } from "../../../modules/status-payments/models/StatusPayment";
 import { PaymentStatusName } from "../../../modules/payments/constants";
+import { handleDatePayment } from "../../../utils/handle-date-payment";
 
 export class ConfirmPaymentWebhookService {
   public async execute(
@@ -54,9 +55,11 @@ export class ConfirmPaymentWebhookService {
       );
     }
 
+    const datePayment = payment?.paidAt ?? handleDatePayment(data, new Date());
+
     await payment.update({
       statusPaymentId: paidStatus.id,
-      paidAt: payment.paidAt ?? this.resolvePaidAt(data),
+      paidAt: datePayment,
     });
 
     return {
@@ -64,25 +67,5 @@ export class ConfirmPaymentWebhookService {
       ignored: false,
       paymentId: payment.id,
     };
-  }
-
-  private resolvePaidAt(data: Partial<AsaasPaymentWebhookDTO>): Date {
-    const paidAt =
-      data.payment?.paymentDate ??
-      data.payment?.confirmedDate ??
-      data.payment?.clientPaymentDate ??
-      data.dateCreated;
-
-    if (!paidAt) {
-      return new Date();
-    }
-
-    const parsedPaidAt = new Date(paidAt);
-
-    if (Number.isNaN(parsedPaidAt.getTime())) {
-      return new Date();
-    }
-
-    return parsedPaidAt;
   }
 }

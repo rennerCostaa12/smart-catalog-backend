@@ -6,7 +6,7 @@ import { GetPixQrCodeController } from "../../controllers/GetPixQrCodeController
 import { createCreditCardPaymentSchema } from "../../validators/create-credit-card-payment.schema";
 import { createPixPaymentSchema } from "../../validators/create-pix-payment.schema";
 import { validateSchema } from "../../../../shared/middlewares/validate-schema";
-import { AsyncRouteHandler } from "./types";
+import { AsyncRouteHandler } from "../../../../types/async_route_handler";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>

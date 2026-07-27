@@ -13,7 +13,7 @@ const confirmPaymentWebhookController = new ConfirmPaymentWebhookController();
 export const webhookRoutes = Router();
 
 webhookRoutes.post(
-  "/asaas",
+  "/asaas/confirm-payment",
   asyncHandler((request, response) =>
     confirmPaymentWebhookController.handle(request, response),
   ),

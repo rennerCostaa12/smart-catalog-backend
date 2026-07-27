@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 
 import { requireAdminAuth } from "../../../../shared/middlewares/require-admin-auth";
 import { CategoriesProductsController } from "../../controllers/CategoriesProductsController";
-import { AsyncRouteHandler } from "./types";
+import { AsyncRouteHandler } from "../../../../types/async_route_handler";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>

@@ -5,7 +5,7 @@ import { validateSchema } from "../../../../shared/middlewares/validate-schema";
 import { CatalogClientsController } from "../../controllers/CatalogClientsController";
 import { createCatalogClientSchema } from "../../validators/create-catalog-client.schema";
 import { updateCatalogClientSchema } from "../../validators/update-catalog-client.schema";
-import { AsyncRouteHandler } from "./types";
+import { AsyncRouteHandler } from "../../../../types/async_route_handler";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>
