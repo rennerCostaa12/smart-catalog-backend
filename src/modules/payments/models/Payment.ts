@@ -19,6 +19,7 @@ export class Payment extends Model<
 > {
   declare id: CreationOptional<number>;
   declare methodPaymentId: number;
+  declare asaasPaymentId: CreationOptional<string | null>;
   declare userId: number;
   declare catalogClientId: number;
   declare amount: number;
@@ -43,6 +44,11 @@ export class Payment extends Model<
           type: DataTypes.INTEGER,
           allowNull: false,
           field: "method_payment_id",
+        },
+        asaasPaymentId: {
+          type: DataTypes.STRING,
+          allowNull: true,
+          field: "asaas_payment_id",
         },
         userId: {
           type: DataTypes.INTEGER,

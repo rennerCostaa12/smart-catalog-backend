@@ -7,6 +7,7 @@ import { ordersRoutes } from "../../modules/orders/routes/orders/routes";
 import { paymentsRoutes } from "../../modules/payments/routes/payments/routes";
 import { productsRoutes } from "../../modules/products/routes/products/routes";
 import { usersRoutes } from "../../modules/users/routes/users/routes";
+import { webhookRoutes } from "../../webhooks/routes";
 import { HttpStatusCode } from "./HttpStatusCode";
 import { successResponse } from "./responses";
 
@@ -28,3 +29,4 @@ routes.use("/api/products", productsRoutes);
 routes.use("/api/categories-products", categoriesProductsRoutes);
 routes.use("/api/catalog-clients", catalogClientsRoutes);
 routes.use("/api/orders", ordersRoutes);
+routes.use("/api/webhook", webhookRoutes);

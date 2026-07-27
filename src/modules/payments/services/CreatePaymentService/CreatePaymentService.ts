@@ -118,6 +118,7 @@ export class CreatePaymentService {
 
     await Payment.create({
       methodPaymentId: references.methodPayment.id,
+      asaasPaymentId: asaasPayment.id,
       userId: data.userId,
       catalogClientId: data.catalogClientId,
       amount: asaasPayment.value,
