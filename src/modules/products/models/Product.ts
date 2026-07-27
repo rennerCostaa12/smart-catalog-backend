@@ -20,6 +20,7 @@ export class Product extends Model<
   declare name: string;
   declare description: CreationOptional<string | null>;
   declare value: number;
+  declare stock: CreationOptional<number>;
   declare imageUrl: CreationOptional<string | null>;
   declare categoriesId: number;
   declare catalogClientId: number;
@@ -49,6 +50,11 @@ export class Product extends Model<
         value: {
           type: DataTypes.DECIMAL(10, 2),
           allowNull: false,
+        },
+        stock: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
         },
         imageUrl: {
           type: DataTypes.STRING,
