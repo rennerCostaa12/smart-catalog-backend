@@ -1,8 +1,8 @@
-import { PAID_EVENTS_ENUM } from "../types";
+import { PaymentConfirmWebhookEventName } from "../types";
 
 export interface AsaasPaymentWebhookDTO {
   id: string;
-  event: PAID_EVENTS_ENUM;
+  event: PaymentConfirmWebhookEventName;
   dateCreated?: string;
   payment: {
     id: string;

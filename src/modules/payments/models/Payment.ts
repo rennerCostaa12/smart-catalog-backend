@@ -25,6 +25,7 @@ export class Payment extends Model<
   declare amount: number;
   declare statusPaymentId: number;
   declare paidAt: CreationOptional<Date | null>;
+  declare paymentReversalDate: CreationOptional<Date | null>;
   declare methodPayment?: NonAttribute<MethodPayment>;
   declare user?: NonAttribute<User>;
   declare catalogClient?: NonAttribute<CatalogClient>;
@@ -73,6 +74,11 @@ export class Payment extends Model<
           type: DataTypes.DATE,
           allowNull: true,
           field: "paid_at",
+        },
+        paymentReversalDate: {
+          type: DataTypes.DATE,
+          allowNull: true,
+          field: "payment_reversal_date",
         },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,

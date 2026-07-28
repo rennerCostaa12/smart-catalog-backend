@@ -26,7 +26,7 @@ export class ConfirmPaymentWebhookService {
       );
     }
 
-    if (!paidEvents.has(data?.event)) {
+    if (!paidEvents.has(data.event)) {
       return {
         updated: false,
         ignored: true,
@@ -44,9 +44,20 @@ export class ConfirmPaymentWebhookService {
       };
     }
 
-    const paidStatus = await StatusPayment.findOne({
-      where: { name: PaymentStatusName.PAID },
+    const paymentStatuses = await StatusPayment.findAll({
+      where: {
+        name: [
+          PaymentStatusName.PAID,
+          PaymentStatusName.REVERSAL_IN_PROGRESS,
+          PaymentStatusName.REVERSAL_DENIED,
+          PaymentStatusName.REVERSED,
+        ],
+      },
     });
+    const paymentStatusByName = new Map(
+      paymentStatuses.map((status) => [status.name, status]),
+    );
+    const paidStatus = paymentStatusByName.get(PaymentStatusName.PAID);
 
     if (!paidStatus) {
       throw new AppError(
@@ -55,7 +66,22 @@ export class ConfirmPaymentWebhookService {
       );
     }
 
-    const datePayment = payment?.paidAt ?? handleDatePayment(data, new Date());
+    const reversalStatusIds = [
+      paymentStatusByName.get(PaymentStatusName.REVERSAL_IN_PROGRESS)?.id,
+      paymentStatusByName.get(PaymentStatusName.REVERSAL_DENIED)?.id,
+      paymentStatusByName.get(PaymentStatusName.REVERSED)?.id,
+    ].filter((statusId): statusId is number => Boolean(statusId));
+
+    if (reversalStatusIds.includes(payment.statusPaymentId)) {
+      return {
+        updated: false,
+        ignored: true,
+        paymentId: payment.id,
+      };
+    }
+
+    const newDate = new Date();
+    const datePayment = payment.paidAt ?? handleDatePayment(data, newDate);
 
     await payment.update({
       statusPaymentId: paidStatus.id,

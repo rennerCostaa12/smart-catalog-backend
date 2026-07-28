@@ -124,13 +124,17 @@ export class CreatePaymentService {
       amount: asaasPayment.value,
       statusPaymentId: statusPayment.id,
       paidAt: statusName === PaymentStatusName.PAID ? new Date() : null,
+      paymentReversalDate:
+        statusName === PaymentStatusName.REVERSED ? new Date() : null,
     });
   }
 
   private mapAsaasStatus(status: string): PaymentStatusName {
+    const normalizedStatus = status.toUpperCase();
+
     if (
       ["CONFIRMED", "RECEIVED", "RECEIVED_IN_CASH"].includes(
-        status.toUpperCase(),
+        normalizedStatus,
       )
     ) {
       return PaymentStatusName.PAID;
@@ -141,12 +145,21 @@ export class CreatePaymentService {
         "CHARGEBACK_REQUESTED",
         "CHARGEBACK_DISPUTE",
         "AWAITING_CHARGEBACK_REVERSAL",
-        "REFUNDED",
-        "REFUND_REQUESTED",
-        "REFUND_IN_PROGRESS",
-      ].includes(status.toUpperCase())
+      ].includes(normalizedStatus)
     ) {
       return PaymentStatusName.CANCELED;
+    }
+
+    if (["REFUND_REQUESTED", "REFUND_IN_PROGRESS"].includes(normalizedStatus)) {
+      return PaymentStatusName.REVERSAL_IN_PROGRESS;
+    }
+
+    if (normalizedStatus === "REFUND_DENIED") {
+      return PaymentStatusName.REVERSAL_DENIED;
+    }
+
+    if (normalizedStatus === "REFUNDED") {
+      return PaymentStatusName.REVERSED;
     }
 
     return PaymentStatusName.PENDING;
