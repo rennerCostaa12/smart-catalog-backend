@@ -2,8 +2,10 @@ import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
 import { CategoryProduct } from "../../categories-products/models/CategoryProduct";
 import { MethodPayment } from "../../method-payments/models/MethodPayment";
 import { OrderItem } from "../../order-items/models/OrderItem";
+import { Payment } from "../../payments/models/Payment";
 import { Product } from "../../products/models/Product";
 import { StatusOrder } from "../../status-orders/models/StatusOrder";
+import { StatusPayment } from "../../status-payments/models/StatusPayment";
 import { Order } from "../models/Order";
 import { OrderResponse, StatusOrderNameEnum } from "./types";
 
@@ -46,6 +48,18 @@ export class ListOrdersService {
           as: "methodPayment",
           attributes: ["name", "description"],
         },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["amount", "paidAt"],
+          include: [
+            {
+              model: StatusPayment,
+              as: "statusPayment",
+              attributes: ["name"],
+            },
+          ],
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -81,11 +95,27 @@ export class ListOrdersService {
         }),
         statusOrderId: ordersData?.statusOrderId,
         methodPaymentId: ordersData?.methodPaymentId,
+        paymentId: ordersData?.paymentId ?? null,
         deliveryMethod: ordersData?.deliveryMethod,
         methodPayment: ordersData.methodPayment
           ? {
               name: ordersData.methodPayment.name,
               description: ordersData.methodPayment.description,
+            }
+          : null,
+        payment: ordersData.payment
+          ? {
+              id: ordersData.payment.id,
+              asaasPaymentId: ordersData.payment.asaasPaymentId ?? null,
+              amount: Number(ordersData.payment.amount),
+              paidAt: ordersData.payment.paidAt ?? null,
+              paymentReversalDate:
+                ordersData.payment.paymentReversalDate ?? null,
+              statusPayment: ordersData.payment.statusPayment
+                ? {
+                    name: ordersData.payment.statusPayment.name,
+                  }
+                : null,
             }
           : null,
         statusOrder: {

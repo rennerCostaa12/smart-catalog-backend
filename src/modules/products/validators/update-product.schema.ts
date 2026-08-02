@@ -33,6 +33,7 @@ export const updateProductSchema = yup
       .positive("O campo catalogClientId deve ser maior que zero.")
       .optional(),
     isActive: yup.boolean().optional(),
+    stocks: yup.number().required("O campo stocks é obrigatório.").min(0),
   })
   .test(
     "has-fields",

@@ -9,16 +9,17 @@ export class ListProductsService {
 
     return products.map((productsData) => {
       return {
-        id: productsData.id,
-        name: productsData.name,
-        description: productsData.description,
-        value: Number(productsData.value),
-        imageUrl: productsData.imageUrl,
-        categoriesId: productsData.categoriesId,
-        catalogClientId: productsData.catalogClientId,
-        isActive: productsData.isActive,
-        createdAt: productsData.createdAt,
-        updatedAt: productsData.updatedAt,
+        id: productsData?.id,
+        name: productsData?.name,
+        description: productsData?.description,
+        value: Number(productsData?.value),
+        stock: productsData?.stock,
+        imageUrl: productsData?.imageUrl,
+        categoriesId: productsData?.categoriesId,
+        catalogClientId: productsData?.catalogClientId,
+        isActive: productsData?.isActive,
+        createdAt: productsData?.createdAt,
+        updatedAt: productsData?.updatedAt,
       };
     });
   }

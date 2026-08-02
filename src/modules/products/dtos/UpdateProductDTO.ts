@@ -6,4 +6,5 @@ export interface UpdateProductDTO {
   categoriesId?: number;
   catalogClientId?: number;
   isActive?: boolean;
+  stocks: number;
 }

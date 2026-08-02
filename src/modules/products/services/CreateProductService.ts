@@ -10,7 +10,7 @@ export class CreateProductService {
       data.isActive = true;
     }
 
-    const { image, ...productData } = data;
+    const { image, stocks, ...productData } = data;
     const imageUrl = await uploadProductImage(image);
 
     if (!imageUrl) {
@@ -23,6 +23,7 @@ export class CreateProductService {
     const product = await Product.create({
       ...productData,
       imageUrl,
+      stock: stocks,
     });
 
     return {
@@ -31,6 +32,7 @@ export class CreateProductService {
       description: product?.description,
       value: Number(product?.value),
       imageUrl: product?.imageUrl,
+      stock: product.stock,
       categoriesId: product?.categoriesId,
       catalogClientId: product?.catalogClientId,
       isActive: product?.isActive,

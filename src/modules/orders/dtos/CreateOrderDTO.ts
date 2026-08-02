@@ -6,6 +6,7 @@ export interface CreateOrderDTO {
   total: number;
   statusOrderId: number;
   methodPaymentId: number;
+  paymentId?: number | null;
   deliveryMethod: DeliveryMethodEnum;
   items: CreateOrderItemDTO[];
 }

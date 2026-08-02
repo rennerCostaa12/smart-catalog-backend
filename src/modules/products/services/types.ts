@@ -4,6 +4,7 @@ export type ProductResponse = {
   description: string | null;
   value: number;
   imageUrl: string | null;
+  stock: number;
   categoriesId: number;
   catalogClientId: number;
   isActive: boolean;
@@ -18,6 +19,7 @@ export type ListProductsByCatalogClientParams = {
   page: number;
   limit: number;
   searchProduct?: string;
+  showAllProduct?: boolean;
 };
 
 export type PaginatedProductsResponse = {

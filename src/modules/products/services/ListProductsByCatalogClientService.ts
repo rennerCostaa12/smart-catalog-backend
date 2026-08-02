@@ -17,6 +17,7 @@ export class ListProductsByCatalogClientService {
     page,
     limit,
     searchProduct,
+    showAllProduct,
   }: ListProductsByCatalogClientParams): Promise<PaginatedProductsResponse> {
     const responseCatalogClient = await CatalogClient.findOne({
       where: {
@@ -34,6 +35,13 @@ export class ListProductsByCatalogClientService {
     const where: WhereOptions<Product> = {
       catalogClientId: responseCatalogClient?.id,
     };
+
+    if (!showAllProduct) {
+      ((where.isActive = true),
+        (where.stock = {
+          [Op.gt]: 0,
+        }));
+    }
 
     if (categoriesId) {
       where.categoriesId = categoriesId;
@@ -68,6 +76,7 @@ export class ListProductsByCatalogClientService {
           description: productData?.description,
           value: Number(productData?.value),
           imageUrl: productData?.imageUrl,
+          stock: productData?.stock,
           categoriesId: productData?.categoriesId,
           isActive: productData?.isActive,
           catalogClientId: productData?.catalogClientId,

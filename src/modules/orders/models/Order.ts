@@ -11,6 +11,7 @@ import {
 import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
 import { MethodPayment } from "../../method-payments/models/MethodPayment";
 import { OrderItem } from "../../order-items/models/OrderItem";
+import { Payment } from "../../payments/models/Payment";
 import { StatusOrder } from "../../status-orders/models/StatusOrder";
 import { User } from "../../users/models/User";
 import { DeliveryMethodEnum } from "../constants";
@@ -25,11 +26,13 @@ export class Order extends Model<
   declare total: number;
   declare statusOrderId: number;
   declare methodPaymentId: number;
+  declare paymentId: CreationOptional<number | null>;
   declare deliveryMethod: DeliveryMethodEnum;
   declare user?: NonAttribute<User>;
   declare catalogClient?: NonAttribute<CatalogClient>;
   declare statusOrder?: NonAttribute<StatusOrder>;
   declare methodPayment?: NonAttribute<MethodPayment>;
+  declare payment?: NonAttribute<Payment | null>;
   declare items?: NonAttribute<OrderItem[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -66,6 +69,11 @@ export class Order extends Model<
           allowNull: false,
           field: "method_payment_id",
         },
+        paymentId: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+          field: "payment_id",
+        },
         deliveryMethod: {
           type: DataTypes.ENUM("RETIRADA", "ENTREGA"),
           allowNull: false,
@@ -101,6 +109,11 @@ export class Order extends Model<
     Order.belongsTo(MethodPayment, {
       as: "methodPayment",
       foreignKey: "methodPaymentId",
+    });
+
+    Order.belongsTo(Payment, {
+      as: "payment",
+      foreignKey: "paymentId",
     });
 
     Order.hasMany(OrderItem, {

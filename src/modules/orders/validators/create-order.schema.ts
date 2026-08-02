@@ -22,6 +22,11 @@ export const createOrderSchema = yup.object({
     .integer("O campo methodPaymentId deve ser um número inteiro.")
     .positive("O campo methodPaymentId deve ser maior que zero.")
     .required("O campo methodPaymentId é obrigatório."),
+  paymentId: yup
+    .number()
+    .integer("O campo paymentId deve ser um número inteiro.")
+    .positive("O campo paymentId deve ser maior que zero.")
+    .required("O campo paymentId é obrigatório."),
   deliveryMethod: yup
     .mixed<DeliveryMethodEnum>()
     .oneOf(

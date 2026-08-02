@@ -16,7 +16,7 @@ export class UpdateProductService {
       throw new AppError("Produto não encontrado.", HttpStatusCode.NOT_FOUND);
     }
 
-    const { image, ...productData } = data;
+    const { image, stocks, ...productData } = data;
     const imageUrl = image ? await uploadProductImage(image) : undefined;
 
     if (!imageUrl) {
@@ -28,6 +28,7 @@ export class UpdateProductService {
 
     await product.update({
       ...productData,
+      stock: stocks,
       ...(imageUrl ? { imageUrl } : {}),
     });
 
@@ -36,6 +37,7 @@ export class UpdateProductService {
       name: product.name,
       description: product.description,
       value: Number(product.value),
+      stock: product.stock,
       imageUrl: product.imageUrl,
       categoriesId: product.categoriesId,
       catalogClientId: product.catalogClientId,

@@ -13,14 +13,14 @@ import { Payment } from "../../models/Payment";
 import { AsaasPaymentsService } from "../AsaasPaymentsService/AsaasPaymentsService";
 import { AsaasPaymentResponse } from "../AsaasPaymentsService/types";
 
-import { PaymentReferences } from "./types";
+import { CreatedPaymentResponse, PaymentReferences } from "./types";
 
 export class CreatePaymentService {
   constructor(private readonly asaasPaymentsService: AsaasPaymentsService) {}
 
   public async createPixPayment(
     data: CreatePixPaymentDTO,
-  ): Promise<AsaasPaymentResponse> {
+  ): Promise<CreatedPaymentResponse> {
     const references = await this.resolveReferences(
       data.userId,
       data.catalogClientId,
@@ -28,14 +28,17 @@ export class CreatePaymentService {
     );
     const asaasPayment = await this.asaasPaymentsService.createPixPayment(data);
 
-    await this.persistPayment(data, asaasPayment, references);
+    const payment = await this.persistPayment(data, asaasPayment, references);
 
-    return asaasPayment;
+    return {
+      ...asaasPayment,
+      paymentId: payment.id,
+    };
   }
 
   public async createCreditCardPayment(
     data: CreateCreditCardPaymentDTO,
-  ): Promise<AsaasPaymentResponse> {
+  ): Promise<CreatedPaymentResponse> {
     const references = await this.resolveReferences(
       data.userId,
       data.catalogClientId,
@@ -44,9 +47,12 @@ export class CreatePaymentService {
     const asaasPayment =
       await this.asaasPaymentsService.createCreditCardPayment(data);
 
-    await this.persistPayment(data, asaasPayment, references);
+    const payment = await this.persistPayment(data, asaasPayment, references);
 
-    return asaasPayment;
+    return {
+      ...asaasPayment,
+      paymentId: payment.id,
+    };
   }
 
   private async resolveReferences(
@@ -105,7 +111,7 @@ export class CreatePaymentService {
     data: CreatePixPaymentDTO | CreateCreditCardPaymentDTO,
     asaasPayment: AsaasPaymentResponse,
     references: PaymentReferences,
-  ): Promise<void> {
+  ): Promise<Payment> {
     const statusName = this.mapAsaasStatus(asaasPayment.status);
     const statusPayment = references.statusPaymentByName.get(statusName);
 
@@ -116,7 +122,7 @@ export class CreatePaymentService {
       );
     }
 
-    await Payment.create({
+    return Payment.create({
       methodPaymentId: references.methodPayment.id,
       asaasPaymentId: asaasPayment.id,
       userId: data.userId,

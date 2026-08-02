@@ -31,6 +31,7 @@ export class UpdateProductStatusService {
       name: product.name,
       description: product.description,
       value: Number(product.value),
+      stock: product.stock,
       imageUrl: product.imageUrl,
       categoriesId: product.categoriesId,
       catalogClientId: product.catalogClientId,

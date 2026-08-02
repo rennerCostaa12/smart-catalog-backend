@@ -14,6 +14,19 @@ type MethodPaymentItem = {
   description: string | null;
 };
 
+type StatusPaymentItem = {
+  name: string;
+};
+
+type PaymentItem = {
+  id: number;
+  asaasPaymentId: string | null;
+  amount: number;
+  paidAt: Date | null;
+  paymentReversalDate: Date | null;
+  statusPayment?: StatusPaymentItem | null;
+};
+
 type ProductItem = {
   name: string;
   description: string | null;
@@ -43,8 +56,10 @@ export type OrderResponse = {
   total: number;
   statusOrderId: number;
   methodPaymentId: number;
+  paymentId: number | null;
   deliveryMethod: DeliveryMethodEnum;
   methodPayment?: MethodPaymentItem | null;
+  payment?: PaymentItem | null;
   statusOrder: {
     name: StatusOrderNameEnum;
   };

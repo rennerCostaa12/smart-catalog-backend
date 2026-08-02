@@ -28,9 +28,35 @@ export class ProductsController {
     }
   }
 
-  public async list(_request: Request, response: Response): Promise<Response> {
+  public async list(request: Request, response: Response): Promise<Response> {
     try {
-      const products = await new ListProductsService().execute();
+      const catalogClientName = String(request?.params?.catalog_client_name);
+      const searchProduct =
+        typeof request?.query?.search === "string"
+          ? request.query.search
+          : undefined;
+      const page = Number(request?.query?.page ?? DEFAULT_INITIAL_PAGE);
+      const limit = Number(request?.query?.limit ?? DEFAULT_PAGINATION_LIMIT);
+      const categoriesId =
+        request.query.categoria === undefined
+          ? undefined
+          : Number(request.query.categoria);
+
+      if (limit > 100) {
+        throw new AppError(
+          "O parâmetro limite deve ser menor ou igual a 100.",
+          HttpStatusCode.BAD_REQUEST,
+        );
+      }
+
+      const products = await new ListProductsByCatalogClientService().execute({
+        catalogClientName,
+        categoriesId,
+        page,
+        limit,
+        searchProduct,
+        showAllProduct: true,
+      });
 
       return successResponse({
         response,
@@ -72,6 +98,7 @@ export class ProductsController {
         page,
         limit,
         searchProduct,
+        showAllProduct: false,
       });
 
       return successResponse({

@@ -10,6 +10,7 @@ import {
 
 import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
 import { MethodPayment } from "../../method-payments/models/MethodPayment";
+import { Order } from "../../orders/models/Order";
 import { StatusPayment } from "../../status-payments/models/StatusPayment";
 import { User } from "../../users/models/User";
 
@@ -30,6 +31,7 @@ export class Payment extends Model<
   declare user?: NonAttribute<User>;
   declare catalogClient?: NonAttribute<CatalogClient>;
   declare statusPayment?: NonAttribute<StatusPayment>;
+  declare orders?: NonAttribute<Order[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -110,6 +112,11 @@ export class Payment extends Model<
     Payment.belongsTo(StatusPayment, {
       as: "statusPayment",
       foreignKey: "statusPaymentId",
+    });
+
+    Payment.hasMany(Order, {
+      as: "orders",
+      foreignKey: "paymentId",
     });
   }
 }

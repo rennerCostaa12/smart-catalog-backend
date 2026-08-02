@@ -6,4 +6,5 @@ export interface CreateProductDTO {
   categoriesId: number;
   catalogClientId: number;
   isActive?: boolean;
+  stocks: number;
 }

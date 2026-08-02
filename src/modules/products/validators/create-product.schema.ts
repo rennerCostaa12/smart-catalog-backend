@@ -31,5 +31,6 @@ export const createProductSchema = yup.object({
     .integer("O campo catalogClientId deve ser um número inteiro.")
     .positive("O campo catalogClientId deve ser maior que zero.")
     .required("O campo catalogClientId é obrigatório."),
-  isActive: yup.boolean().optional()
+  isActive: yup.boolean().optional(),
+  stocks: yup.number().required("O campo stocks é obrigatório.").min(0),
 });
