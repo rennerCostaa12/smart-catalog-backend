@@ -8,6 +8,7 @@ import { DeleteOrderService } from "../services/DeleteOrderService";
 import { GetOrderService } from "../services/GetOrderService";
 import { ListOrdersService } from "../services/ListOrdersService";
 import { UpdateOrderService } from "../services/UpdateOrderService";
+import { ListOrdersByCatalogIdService } from "../services/ListOrdersByCatalogIdService";
 
 export class OrdersController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -33,6 +34,24 @@ export class OrdersController {
     try {
       const userId = this.getUserIdFromParams(request);
       const orders = await new ListOrdersService().execute(userId);
+
+      return successResponse({
+        response,
+        message: "Pedidos listados com sucesso.",
+        data: orders,
+      });
+    } catch (error) {
+      return this.handleError(error, response);
+    }
+  }
+
+  public async listByCatalogId(request: Request, response: Response) {
+    try {
+      const catalogId = request?.params?.catalogId ?? 0;
+
+      const orders = await new ListOrdersByCatalogIdService().execute(
+        Number(catalogId),
+      );
 
       return successResponse({
         response,

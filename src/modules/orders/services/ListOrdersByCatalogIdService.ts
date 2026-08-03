@@ -6,13 +6,16 @@ import { Payment } from "../../payments/models/Payment";
 import { Product } from "../../products/models/Product";
 import { StatusOrder } from "../../status-orders/models/StatusOrder";
 import { StatusPayment } from "../../status-payments/models/StatusPayment";
+import { User } from "../../users/models/User";
 import { Order } from "../models/Order";
-import { OrderResponse, StatusOrderNameEnum } from "./types";
+import { OrderByCatalogResponse, StatusOrderNameEnum } from "./types";
 
-export class ListOrdersService {
-  public async execute(userId: number): Promise<OrderResponse[]> {
+export class ListOrdersByCatalogIdService {
+  public async execute(
+    catalogClientId: number,
+  ): Promise<OrderByCatalogResponse[]> {
     const orders = await Order.findAll({
-      where: { userId },
+      where: { catalogClientId },
       include: [
         {
           model: OrderItem,
@@ -59,6 +62,11 @@ export class ListOrdersService {
               attributes: ["name"],
             },
           ],
+        },
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "name", "email", "phone"],
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -120,6 +128,12 @@ export class ListOrdersService {
           : null,
         statusOrder: {
           name: ordersData.statusOrder?.name as StatusOrderNameEnum,
+        },
+        user: {
+          id: ordersData.user?.id,
+          name: ordersData.user?.name,
+          email: ordersData.user?.email,
+          phone: ordersData.user?.phone,
         },
       };
     });

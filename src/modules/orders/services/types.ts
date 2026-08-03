@@ -64,6 +64,13 @@ export type OrderResponse = {
     name: StatusOrderNameEnum;
   };
   items?: OrdersItems[];
-  createdAt: Date;
-  updatedAt: Date;
+};
+
+export type OrderByCatalogResponse = OrderResponse & {
+  user: {
+    id: number | undefined;
+    name: string | undefined;
+    email: string | undefined;
+    phone: string | undefined;
+  };
 };

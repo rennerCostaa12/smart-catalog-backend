@@ -41,7 +41,7 @@ productsRoutes.post(
 );
 
 productsRoutes.get(
-  "/",
+  "/all-products/:catalog_client_name",
   asyncHandler((request, response) =>
     productsController.list(request, response),
   ),

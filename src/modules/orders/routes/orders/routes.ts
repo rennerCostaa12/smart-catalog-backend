@@ -6,6 +6,7 @@ import { validateSchema } from "../../../../shared/middlewares/validate-schema";
 import { OrdersController } from "../../controllers/OrdersController";
 import { createOrderSchema } from "../../validators/create-order.schema";
 import { AsyncRouteHandler } from "../../../../types/async_route_handler";
+import { updateOrderSchema } from "../../validators/update-order.schema";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>
@@ -28,6 +29,14 @@ ordersRoutes.post(
 );
 
 ordersRoutes.get(
+  "/catalog-client/:catalogId",
+  requireAdminAuth,
+  asyncHandler((request, response) =>
+    ordersController.listByCatalogId(request, response),
+  ),
+);
+
+ordersRoutes.get(
   "/:userId/",
   asyncHandler((request, response) => ordersController.list(request, response)),
 );
@@ -37,17 +46,16 @@ ordersRoutes.get(
   asyncHandler((request, response) => ordersController.get(request, response)),
 );
 
-// TODO: implementar futuramente
-// ordersRoutes.put(
-//   "/:userId/:id",
-//   asyncHandler(validateSchema(updateOrderSchema)),
-//   asyncHandler((request, response) =>
-//     ordersController.update(request, response),
-//   ),
-// );
+ordersRoutes.patch(
+  "/:id",
+  asyncHandler(validateSchema(updateOrderSchema)),
+  asyncHandler((request, response) =>
+    ordersController.update(request, response),
+  ),
+);
 
 // TODO: implementar futuramente
-// ordersRoutes.patch(
+// ordersRoutes.put(
 //   "/:userId/:id",
 //   asyncHandler(validateSchema(updateOrderSchema)),
 //   asyncHandler((request, response) =>
