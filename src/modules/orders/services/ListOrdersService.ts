@@ -121,6 +121,7 @@ export class ListOrdersService {
         statusOrder: {
           name: ordersData.statusOrder?.name as StatusOrderNameEnum,
         },
+        createdAt: ordersData?.createdAt,
       };
     });
   }

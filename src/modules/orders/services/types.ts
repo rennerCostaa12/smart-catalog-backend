@@ -64,6 +64,7 @@ export type OrderResponse = {
     name: StatusOrderNameEnum;
   };
   items?: OrdersItems[];
+  createdAt: Date;
 };
 
 export type OrderByCatalogResponse = OrderResponse & {
@@ -72,5 +73,22 @@ export type OrderByCatalogResponse = OrderResponse & {
     name: string | undefined;
     email: string | undefined;
     phone: string | undefined;
+  };
+};
+
+export type ListOrdersByCatalogIdParams = {
+  catalogClientId: number;
+  page: number;
+  limit: number;
+  statusOrderId?: number;
+};
+
+export type PaginatedOrdersByCatalogResponse = {
+  orders: OrderByCatalogResponse[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalItems: number;
+    totalPages: number;
   };
 };

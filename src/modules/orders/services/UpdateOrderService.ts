@@ -5,11 +5,10 @@ import { UpdateOrderDTO } from "../dtos/UpdateOrderDTO";
 import { Order } from "../models/Order";
 
 export class UpdateOrderService {
-  public async execute(id: string, userId: number, data: UpdateOrderDTO) {
+  public async execute(id: string, data: UpdateOrderDTO) {
     const order = await Order.findOne({
       where: {
         id,
-        userId,
       },
     });
 
@@ -19,7 +18,6 @@ export class UpdateOrderService {
 
     await this.ensurePaymentBelongsToOrder(
       data.paymentId === undefined ? order.paymentId : data.paymentId,
-      userId,
       data.catalogClientId ?? order.catalogClientId,
       data.methodPaymentId ?? order.methodPaymentId,
     );
@@ -35,14 +33,11 @@ export class UpdateOrderService {
       methodPaymentId: order?.methodPaymentId,
       paymentId: order?.paymentId ?? null,
       deliveryMethod: order?.deliveryMethod,
-      createdAt: order?.createdAt,
-      updatedAt: order?.updatedAt,
     };
   }
 
   private async ensurePaymentBelongsToOrder(
     paymentId: number | null | undefined,
-    userId: number,
     catalogClientId: number,
     methodPaymentId: number,
   ): Promise<void> {
@@ -53,7 +48,6 @@ export class UpdateOrderService {
     const payment = await Payment.findOne({
       where: {
         id: paymentId,
-        userId,
         catalogClientId,
         methodPaymentId,
       },

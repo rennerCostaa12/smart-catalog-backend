@@ -7,7 +7,6 @@ import { CreateProductService } from "../services/CreateProductService";
 import { DeleteProductService } from "../services/DeleteProductService";
 import { GetProductService } from "../services/GetProductService";
 import { ListProductsByCatalogClientService } from "../services/ListProductsByCatalogClientService";
-import { ListProductsService } from "../services/ListProductsService";
 import { UpdateProductService } from "../services/UpdateProductService";
 import { UpdateProductStatusService } from "../services/UpdateProductStatusService";
 import { DEFAULT_INITIAL_PAGE, DEFAULT_PAGINATION_LIMIT } from "../constants";
@@ -78,8 +77,10 @@ export class ProductsController {
         typeof request?.query?.search === "string"
           ? request.query.search
           : undefined;
+
       const page = Number(request?.query?.page ?? DEFAULT_INITIAL_PAGE);
       const limit = Number(request?.query?.limit ?? DEFAULT_PAGINATION_LIMIT);
+
       const categoriesId =
         request.query.categoria === undefined
           ? undefined

@@ -1,3 +1,5 @@
+import { AppError } from "../../../shared/errors/AppError";
+import { HttpStatusCode } from "../../../shared/http/HttpStatusCode";
 import { CatalogClient } from "../../catalog-clients/models/CatalogClient";
 import { CategoryProduct } from "../../categories-products/models/CategoryProduct";
 import { MethodPayment } from "../../method-payments/models/MethodPayment";
@@ -8,14 +10,34 @@ import { StatusOrder } from "../../status-orders/models/StatusOrder";
 import { StatusPayment } from "../../status-payments/models/StatusPayment";
 import { User } from "../../users/models/User";
 import { Order } from "../models/Order";
-import { OrderByCatalogResponse, StatusOrderNameEnum } from "./types";
+import {
+  ListOrdersByCatalogIdParams,
+  PaginatedOrdersByCatalogResponse,
+  StatusOrderNameEnum,
+} from "./types";
 
 export class ListOrdersByCatalogIdService {
-  public async execute(
-    catalogClientId: number,
-  ): Promise<OrderByCatalogResponse[]> {
-    const orders = await Order.findAll({
-      where: { catalogClientId },
+  public async execute({
+    catalogClientId,
+    page,
+    limit,
+    statusOrderId,
+  }: ListOrdersByCatalogIdParams): Promise<PaginatedOrdersByCatalogResponse> {
+    if (limit > 100) {
+      throw new AppError(
+        "O parâmetro limite deve ser menor ou igual a 100.",
+        HttpStatusCode.BAD_REQUEST,
+      );
+    }
+
+    const where = {
+      catalogClientId,
+      ...(statusOrderId ? { statusOrderId } : {}),
+    };
+
+    const { rows, count } = await Order.findAndCountAll({
+      where,
+      distinct: true,
       include: [
         {
           model: OrderItem,
@@ -70,37 +92,41 @@ export class ListOrdersByCatalogIdService {
         },
       ],
       order: [["createdAt", "DESC"]],
+      limit,
+      offset: (page - 1) * limit,
     });
 
-    return orders.map((ordersData) => {
+    const orders = rows.map((ordersData) => {
+      const items = ordersData.items?.map((item) => {
+        const product = item.product!;
+
+        return {
+          quantity: item.quantity,
+          unitPrice: Number(item.unitPrice),
+          subtotal: Number(item.subtotal),
+          product: {
+            name: product.name,
+            description: product.description,
+            value: Number(product.value),
+            imageUrl: product.imageUrl,
+            catalogClient: {
+              name: product.catalogClient!.name,
+              description: product.catalogClient!.description,
+            },
+            category: {
+              name: product.category!.name,
+              description: product.category!.description,
+            },
+          },
+        };
+      });
+
       return {
         id: ordersData?.id,
         userId: ordersData?.userId,
         catalogClientId: ordersData?.catalogClientId,
         total: Number(ordersData?.total),
-        items: ordersData.items?.map((item) => {
-          const product = item.product!;
-
-          return {
-            quantity: item.quantity,
-            unitPrice: Number(item.unitPrice),
-            subtotal: Number(item.subtotal),
-            product: {
-              name: product.name,
-              description: product.description,
-              value: Number(product.value),
-              imageUrl: product.imageUrl,
-              catalogClient: {
-                name: product.catalogClient!.name,
-                description: product.catalogClient!.description,
-              },
-              category: {
-                name: product.category!.name,
-                description: product.category!.description,
-              },
-            },
-          };
-        }),
+        items: items,
         statusOrderId: ordersData?.statusOrderId,
         methodPaymentId: ordersData?.methodPaymentId,
         paymentId: ordersData?.paymentId ?? null,
@@ -135,7 +161,18 @@ export class ListOrdersByCatalogIdService {
           email: ordersData.user?.email,
           phone: ordersData.user?.phone,
         },
+        createdAt: ordersData?.createdAt
       };
     });
+
+    return {
+      orders: orders,
+      pagination: {
+        page,
+        limit,
+        totalItems: count,
+        totalPages: Math.ceil(count / limit),
+      },
+    };
   }
 }

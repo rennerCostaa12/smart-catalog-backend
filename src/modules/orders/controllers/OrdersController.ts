@@ -9,6 +9,7 @@ import { GetOrderService } from "../services/GetOrderService";
 import { ListOrdersService } from "../services/ListOrdersService";
 import { UpdateOrderService } from "../services/UpdateOrderService";
 import { ListOrdersByCatalogIdService } from "../services/ListOrdersByCatalogIdService";
+import { DEFAULT_INITIAL_PAGE, DEFAULT_PAGINATION_LIMIT } from "../constants";
 
 export class OrdersController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -45,13 +46,24 @@ export class OrdersController {
     }
   }
 
-  public async listByCatalogId(request: Request, response: Response) {
+  public async listByCatalogId(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
     try {
-      const catalogId = request?.params?.catalogId ?? 0;
+      const catalogId = Number(request?.params?.catalogId);
 
-      const orders = await new ListOrdersByCatalogIdService().execute(
-        Number(catalogId),
-      );
+      const page = Number(request?.query?.page ?? DEFAULT_INITIAL_PAGE);
+      const limit = Number(request?.query?.limit ?? DEFAULT_PAGINATION_LIMIT);
+
+      const statusOrderId = Number(request?.query?.statusOrderId);
+
+      const orders = await new ListOrdersByCatalogIdService().execute({
+        catalogClientId: catalogId,
+        page,
+        limit,
+        statusOrderId,
+      });
 
       return successResponse({
         response,
@@ -82,12 +94,11 @@ export class OrdersController {
 
   public async update(request: Request, response: Response): Promise<Response> {
     try {
-      const userId = this.getUserIdFromParams(request);
+      //const userId = this.getUserIdFromParams(request);
       const orderId = String(request?.params?.id);
 
       const order = await new UpdateOrderService().execute(
         orderId,
-        userId,
         request.body,
       );
 
