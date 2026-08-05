@@ -10,6 +10,7 @@ import {
 
 import { Order } from "../../orders/models/Order";
 import { Payment } from "../../payments/models/Payment";
+import { UserAddress } from "../../user-address/models/UserAddress";
 
 export class User extends Model<
   InferAttributes<User>,
@@ -19,6 +20,7 @@ export class User extends Model<
   declare name: string;
   declare email: string;
   declare phone: string;
+  declare addresses?: NonAttribute<UserAddress[]>;
   declare payments?: NonAttribute<Payment[]>;
   declare orders?: NonAttribute<Order[]>;
   declare createdAt: CreationOptional<Date>;
@@ -63,6 +65,11 @@ export class User extends Model<
 
     User.hasMany(Order, {
       as: "orders",
+      foreignKey: "userId",
+    });
+
+    User.hasMany(UserAddress, {
+      as: "addresses",
       foreignKey: "userId",
     });
   }

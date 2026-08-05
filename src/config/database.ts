@@ -10,6 +10,7 @@ import { Payment } from "../modules/payments/models/Payment";
 import { Product } from "../modules/products/models/Product";
 import { StatusOrder } from "../modules/status-orders/models/StatusOrder";
 import { StatusPayment } from "../modules/status-payments/models/StatusPayment";
+import { UserAddress } from "../modules/user-address/models/UserAddress";
 import { User } from "../modules/users/models/User";
 import { env } from "./env";
 
@@ -39,6 +40,7 @@ const models: DatabaseModel[] = [
   MethodPayment,
   StatusPayment,
   StatusOrder,
+  UserAddress,
   Payment,
   Order,
   OrderItem,
