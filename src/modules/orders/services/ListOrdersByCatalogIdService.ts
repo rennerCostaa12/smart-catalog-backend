@@ -8,6 +8,7 @@ import { Payment } from "../../payments/models/Payment";
 import { Product } from "../../products/models/Product";
 import { StatusOrder } from "../../status-orders/models/StatusOrder";
 import { StatusPayment } from "../../status-payments/models/StatusPayment";
+import { UserAddress } from "../../user-address/models/UserAddress";
 import { User } from "../../users/models/User";
 import { Order } from "../models/Order";
 import {
@@ -90,6 +91,20 @@ export class ListOrdersByCatalogIdService {
           as: "user",
           attributes: ["id", "name", "email", "phone"],
         },
+        {
+          model: UserAddress,
+          as: "userAddress",
+          attributes: [
+            "label",
+            "address",
+            "neighborhood",
+            "complement",
+            "city",
+            "state",
+            "number",
+            "postalCode",
+          ],
+        },
       ],
       order: [["createdAt", "DESC"]],
       limit,
@@ -131,6 +146,18 @@ export class ListOrdersByCatalogIdService {
         methodPaymentId: ordersData?.methodPaymentId,
         paymentId: ordersData?.paymentId ?? null,
         deliveryMethod: ordersData?.deliveryMethod,
+        userAddress: ordersData.userAddress
+          ? {
+              label: ordersData.userAddress.label,
+              address: ordersData.userAddress.address,
+              neighborhood: ordersData.userAddress.neighborhood,
+              complement: ordersData.userAddress.complement,
+              city: ordersData.userAddress.city,
+              state: ordersData.userAddress.state,
+              number: ordersData.userAddress.number,
+              postalCode: ordersData.userAddress.postalCode,
+            }
+          : null,
         methodPayment: ordersData.methodPayment
           ? {
               name: ordersData.methodPayment.name,
@@ -161,7 +188,7 @@ export class ListOrdersByCatalogIdService {
           email: ordersData.user?.email,
           phone: ordersData.user?.phone,
         },
-        createdAt: ordersData?.createdAt
+        createdAt: ordersData?.createdAt,
       };
     });
 

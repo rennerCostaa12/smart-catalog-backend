@@ -8,6 +8,7 @@ import {
   Sequelize,
 } from "sequelize";
 
+import { Order } from "../../orders/models/Order";
 import { User } from "../../users/models/User";
 
 export class UserAddress extends Model<
@@ -25,6 +26,7 @@ export class UserAddress extends Model<
   declare postalCode: string;
   declare userId: number;
   declare user?: NonAttribute<User>;
+  declare orders?: NonAttribute<Order[]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -89,6 +91,11 @@ export class UserAddress extends Model<
     UserAddress.belongsTo(User, {
       as: "user",
       foreignKey: "userId",
+    });
+
+    UserAddress.hasMany(Order, {
+      as: "orders",
+      foreignKey: "userAddressId",
     });
   }
 }

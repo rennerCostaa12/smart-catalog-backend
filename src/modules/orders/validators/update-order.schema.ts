@@ -7,6 +7,12 @@ export const updateOrderSchema = yup
       .integer("O campo statusOrderId deve ser um número inteiro.")
       .positive("O campo statusOrderId deve ser maior que zero.")
       .optional(),
+    userAddressId: yup
+      .number()
+      .integer("O campo userAddressId deve ser um número inteiro.")
+      .positive("O campo userAddressId deve ser maior que zero.")
+      .nullable()
+      .optional(),
   })
   .test(
     "has-fields",

@@ -6,6 +6,7 @@ import { Payment } from "../../payments/models/Payment";
 import { Product } from "../../products/models/Product";
 import { StatusOrder } from "../../status-orders/models/StatusOrder";
 import { StatusPayment } from "../../status-payments/models/StatusPayment";
+import { UserAddress } from "../../user-address/models/UserAddress";
 import { Order } from "../models/Order";
 import { OrderResponse, StatusOrderNameEnum } from "./types";
 
@@ -60,6 +61,20 @@ export class ListOrdersService {
             },
           ],
         },
+        {
+          model: UserAddress,
+          as: "userAddress",
+          attributes: [
+            "label",
+            "address",
+            "neighborhood",
+            "complement",
+            "city",
+            "state",
+            "number",
+            "postalCode",
+          ],
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -97,6 +112,18 @@ export class ListOrdersService {
         methodPaymentId: ordersData?.methodPaymentId,
         paymentId: ordersData?.paymentId ?? null,
         deliveryMethod: ordersData?.deliveryMethod,
+        userAddress: ordersData.userAddress
+          ? {
+              label: ordersData.userAddress.label,
+              address: ordersData.userAddress.address,
+              neighborhood: ordersData.userAddress.neighborhood,
+              complement: ordersData.userAddress.complement,
+              city: ordersData.userAddress.city,
+              state: ordersData.userAddress.state,
+              number: ordersData.userAddress.number,
+              postalCode: ordersData.userAddress.postalCode,
+            }
+          : null,
         methodPayment: ordersData.methodPayment
           ? {
               name: ordersData.methodPayment.name,

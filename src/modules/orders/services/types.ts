@@ -27,6 +27,17 @@ type PaymentItem = {
   statusPayment?: StatusPaymentItem | null;
 };
 
+type UserAddressItem = {
+  label: string;
+  address: string;
+  neighborhood: string;
+  complement: string | null;
+  city: string;
+  state: string;
+  number: number;
+  postalCode: string;
+};
+
 type ProductItem = {
   name: string;
   description: string | null;
@@ -58,6 +69,7 @@ export type OrderResponse = {
   methodPaymentId: number;
   paymentId: number | null;
   deliveryMethod: DeliveryMethodEnum;
+  userAddress?: UserAddressItem | null;
   methodPayment?: MethodPaymentItem | null;
   payment?: PaymentItem | null;
   statusOrder: {
