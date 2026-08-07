@@ -7,6 +7,7 @@ import { createCreditCardPaymentSchema } from "../../validators/create-credit-ca
 import { createPixPaymentSchema } from "../../validators/create-pix-payment.schema";
 import { validateSchema } from "../../../../shared/middlewares/validate-schema";
 import { AsyncRouteHandler } from "../../../../types/async_route_handler";
+import { requireAuth } from "../../../../shared/middlewares/require-auth";
 
 const asyncHandler =
   (handler: AsyncRouteHandler) =>
@@ -20,6 +21,8 @@ const createCreditCardPaymentController =
 const getPixQrCodeController = new GetPixQrCodeController();
 
 export const paymentsRoutes = Router();
+
+paymentsRoutes.use(requireAuth);
 
 paymentsRoutes.post(
   "/pix",
